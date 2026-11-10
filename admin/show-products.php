@@ -126,9 +126,7 @@ include "db-conn.php";
                                                         <th>#</th>
                                                         <th>ID</th>
                                                         <th>Product</th>
-                                                        <th>Display Order</th>
-                                                      <th>Category</th>
-<th>Sub Category</th>
+                                                        <th>Category</th>
                                                         <th>Image</th>
                                                         <th>Add More Image</th>
                                                         <th>MRP</th>
@@ -146,38 +144,16 @@ include "db-conn.php";
                                                     $perPage = 10;
                                                     $offset = ($page - 1) * $perPage;
 
-                                                    // $sql = "SELECT * FROM products";
-                                                    // $countSql = "SELECT COUNT(*) as total FROM products";
-                                                    
-          $sql = "SELECT
-            p.*,
-            c.categories AS category_name,
-            s.categories AS sub_category_name
-        FROM products p
-        LEFT JOIN categories c
-            ON c.cate_id = p.pro_cate
-        LEFT JOIN sub_categories s
-            ON s.id = p.pro_sub_cate";
+                                                    $sql = "SELECT * FROM products";
+                                                    $countSql = "SELECT COUNT(*) as total FROM products";
 
-$countSql = "SELECT COUNT(*) AS total FROM products p";
+                                                    if (!empty($search)) {
+                                                        $searchTerm = mysqli_real_escape_string($conn, $search);
+                                                        $sql .= " WHERE pro_name LIKE '%$searchTerm%' OR pro_id LIKE '%$searchTerm%'";
+                                                        $countSql .= " WHERE pro_name LIKE '%$searchTerm%' OR pro_id LIKE '%$searchTerm%'";
+                                                    }
 
- if (!empty($search)) {
-
-    $searchTerm = mysqli_real_escape_string($conn, $search);
-
-    $sql .= " WHERE
-                p.pro_name LIKE '%$searchTerm%' OR
-                p.pro_id LIKE '%$searchTerm%' OR
-                c.categories LIKE '%$searchTerm%' OR
-                s.categories LIKE '%$searchTerm%'";
-                
-    $countSql .= " WHERE
-                    pro_name LIKE '%$searchTerm%' OR
-                    pro_id LIKE '%$searchTerm%'";
-}
-
-                                                 $sql .= " ORDER BY p.display_order ASC, p.pro_id DESC
-          LIMIT $offset,$perPage";
+                                                    $sql .= " ORDER BY pro_id DESC LIMIT $offset, $perPage";
 
                                                     $result = mysqli_query($conn, $sql);
                                                     $countResult = mysqli_query($conn, $countSql);
@@ -199,10 +175,7 @@ $countSql = "SELECT COUNT(*) AS total FROM products p";
                                                                     <?= htmlspecialchars(string: $row['pro_id']) ?>
                                                                 </td>
                                                                 <td><?= htmlspecialchars($row['pro_name']) ?></td>
-                                                                <td><?= (int)$row['display_order'] ?></td>
-                                                               <td><?= htmlspecialchars($row['category_name'] ?? '-') ?></td>
-
-<td><?= htmlspecialchars($row['sub_category_name'] ?? '-') ?></td>
+                                                                <td><?= htmlspecialchars($row['pro_cate']) ?></td>
                                                                 <td>
                                                                     <img src="assets/img/uploads/<?= htmlspecialchars($first_image) ?>"
                                                                         alt="<?= htmlspecialchars($row['pro_name']) ?>"

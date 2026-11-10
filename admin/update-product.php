@@ -1,162 +1,121 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
 include "db-conn.php";
 
-if (isset($_POST['update-product'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update-product'])) {
+    // Get all POST data
+    $pro_id = intval($_POST['pro_id']);
+    $pro_name = mysqli_real_escape_string($conn, $_POST['pro_name'] ?? '');
+    $brand_name = mysqli_real_escape_string($conn, $_POST['brand_name'] ?? '');
+    $pro_cate = intval($_POST['pro_cate'] ?? 0);
+    $pro_sub_cate = intval($_POST['pro_sub_cate'] ?? 0);
+    $short_desc = mysqli_real_escape_string($conn, $_POST['short_desc'] ?? '');
+    $description = mysqli_real_escape_string($conn, $_POST['pro_desc'] ?? '');
+    $new_arrival = intval($_POST['new_arrival'] ?? 0);
+    $trending = intval($_POST['trending'] ?? 0);
+    $qty = intval($_POST['qty'] ?? 0);
+    $mrp = floatval($_POST['mrp'] ?? 0);
+    $selling_price = floatval($_POST['selling_price'] ?? 0);
+    $whole_sale_selling_price = floatval($_POST['whole_sale_selling_price'] ?? 0);
+    $stock = mysqli_real_escape_string($conn, $_POST['stock'] ?? '');
+    $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title'] ?? '');
+    $meta_desc = mysqli_real_escape_string($conn, $_POST['meta_desc'] ?? '');
+    $meta_key = mysqli_real_escape_string($conn, $_POST['meta_key'] ?? '');
     
-    // Get all form data
-    $pro_id         = intval($_POST['pro_id']);
-    $pro_name       = mysqli_real_escape_string($conn, $_POST['pro_name']);
-    $brand_name     = mysqli_real_escape_string($conn, $_POST['brand_name'] ?? '');
-    $pro_cate       = intval($_POST['pro_cate']);
-    $pro_sub_cate   = intval($_POST['pro_sub_cate'] ?? 0);
-    $short_desc     = mysqli_real_escape_string($conn, $_POST['short_desc']);
-    $description    = mysqli_real_escape_string($conn, $_POST['pro_desc']);
-    $new_arrival    = intval($_POST['new_arrival']);
-    $trending       = intval($_POST['trending'] ?? 0);
-    $qty            = intval($_POST['qty'] ?? 0);
-    $whole_sale_price = mysqli_real_escape_string($conn, $_POST['whole_sale_selling_price'] ?? '');
-    $mrp            = floatval($_POST['mrp']);
-    $selling_price  = floatval($_POST['selling_price']);
-    $stock          = intval($_POST['stock']);
-    $status         = intval($_POST['status']);
-    $display_order = intval($_POST['display_order']);
-    $meta_title     = mysqli_real_escape_string($conn, $_POST['meta_title']);
-    $meta_desc      = mysqli_real_escape_string($conn, $_POST['meta_desc']);
-    $meta_key       = mysqli_real_escape_string($conn, $_POST['meta_key']);
-    $added_on       = date('Y-m-d H:i:s');
+    // ---> Naya Schema Variable Yahan Catch Kiya Hai <---
+    $schema_markup = mysqli_real_escape_string($conn, trim($_POST['schema_markup'] ?? ''));
     
-    // Generate slug URL
-    $slug_url = strtolower(str_replace(" ", "-", $pro_name));
+    $status = intval($_POST['status'] ?? 0);
+    $slug_url = mysqli_real_escape_string($conn, $_POST['slug_url'] ?? '');
 
-    // ==========================================
-    // SINGLE IMAGE UPLOAD (FIXED)
-    // ==========================================
-    
-    $target_dir = "assets/img/uploads/";
-
-    // Create directory if not exists
-    if (!is_dir($target_dir)) {
-        mkdir($target_dir, 0755, true);
+    // Handle images
+    $current_images = [];
+    $query = "SELECT pro_img FROM products WHERE pro_id = $pro_id";
+    $result = mysqli_query($conn, $query);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $current_images = !empty($row['pro_img']) ? explode(',', $row['pro_img']) : [];
     }
 
-    // Check if new image is uploaded (SINGLE FILE, not array)
-    if (isset($_FILES['pro_img']) && $_FILES['pro_img']['error'] === UPLOAD_ERR_OK && !empty($_FILES['pro_img']['name'])) {
-        
-        $filename = $_FILES['pro_img']['name'];
-        $tempname = $_FILES['pro_img']['tmp_name'];
-        $filesize = $_FILES['pro_img']['size'];
-        
-        // Get file extension
-        $file_extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
-        // Allowed extensions
-        $allowed_extensions = array('jpg', 'jpeg', 'png', 'gif', 'webp');
-        
-        if (in_array($file_extension, $allowed_extensions)) {
-            
-            // Create unique filename
-            $uniqueFilename = time() . "_" . rand(1000, 9999) . "." . $file_extension;
-            $target_file = $target_dir . $uniqueFilename;
-
-            // Upload file
-            if (move_uploaded_file($tempname, $target_file)) {
-                $pro_img = $uniqueFilename; // New image name
-                
-                // Optional: Delete old image if exists
-                $old_img_query = "SELECT pro_img FROM products WHERE pro_id = '$pro_id'";
-                $old_result = mysqli_query($conn, $old_img_query);
-                if ($old_result && mysqli_num_rows($old_result) > 0) {
-                    $old_data = mysqli_fetch_assoc($old_result);
-                    $old_image = $old_data['pro_img'];
-                    if (!empty($old_image)) {
-                        $old_image_path = $target_dir . $old_image;
-                        if (file_exists($old_image_path)) {
-                            unlink($old_image_path); // Delete old image
-                        }
-                    }
-                }
-                
-            } else {
-                echo "<script>alert('Failed to upload image.');</script>";
+    // Remove images marked for deletion
+    $removed_images = isset($_POST['removed_images']) ? explode(',', $_POST['removed_images']) : [];
+    foreach ($removed_images as $removed) {
+        $removed = trim($removed);
+        if (!empty($removed) && ($key = array_search($removed, $current_images)) !== false) {
+            unset($current_images[$key]);
+            // Optional: Delete the physical file
+            $file_path = "assets/img/uploads/" . $removed;
+            if (file_exists($file_path)) {
+                unlink($file_path);
             }
-        } else {
-            echo "<script>alert('Invalid file type. Only JPG, JPEG, PNG, GIF, WEBP allowed.');</script>";
         }
     }
 
-    // ==========================================
-    // BUILD UPDATE QUERY
-    // ==========================================
-    
-    if (isset($pro_img) && !empty($pro_img)) {
-        // New image uploaded - update image field
-        $query = "UPDATE `products` SET 
-    `pro_name` = '$pro_name',
-    `brand_name` = '$brand_name',
-    `pro_cate` = '$pro_cate',
-    `pro_sub_cate` = '$pro_sub_cate',
-    `display_order` = '$display_order',
-    `short_desc` = '$short_desc',
-    `description` = '$description',
-    `new_arrival` = '$new_arrival',
-    `trending` = '$trending',
-    `qty` = '$qty',
-    `mrp` = '$mrp',
-    `selling_price` = '$selling_price',
-    `whole_sale_selling_price` = '$whole_sale_price',
-    `stock` = '$stock',
-    `pro_img` = '$pro_img',
-    `status` = '$status',
-    `slug_url` = '$slug_url',
-    `meta_title` = '$meta_title',
-    `meta_desc` = '$meta_desc',
-    `meta_key` = '$meta_key',
-    `added_on` = '$added_on'
-WHERE `pro_id` = '$pro_id'";
-    } else {
-        // No new image - don't update image field
-        $query = "UPDATE `products` SET 
-    `pro_name` = '$pro_name',
-    `brand_name` = '$brand_name',
-    `pro_cate` = '$pro_cate',
-    `pro_sub_cate` = '$pro_sub_cate',
-    `display_order` = '$display_order',
-    `short_desc` = '$short_desc',
-    `description` = '$description',
-    `new_arrival` = '$new_arrival',
-    `trending` = '$trending',
-    `qty` = '$qty',
-    `mrp` = '$mrp',
-    `selling_price` = '$selling_price',
-    `whole_sale_selling_price` = '$whole_sale_price',
-    `stock` = '$stock',
-    `status` = '$status',
-    `slug_url` = '$slug_url',
-    `meta_title` = '$meta_title',
-    `meta_desc` = '$meta_desc',
-    `meta_key` = '$meta_key',
-    `added_on` = '$added_on'
-WHERE `pro_id` = '$pro_id'";
+    // Handle new file uploads
+    $new_images = [];
+    if (!empty($_FILES['pro_img']['name'][0])) {
+        $upload_dir = "assets/img/uploads/";
+
+        foreach ($_FILES['pro_img']['tmp_name'] as $key => $tmp_name) {
+            $file_name = $_FILES['pro_img']['name'][$key];
+            $file_size = $_FILES['pro_img']['size'][$key];
+            $file_error = $_FILES['pro_img']['error'][$key];
+
+            if ($file_error === 0) {
+                // Generate unique filename
+                $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
+                $new_file_name = time() . '_' . uniqid() . '.' . $file_ext;
+                $destination = $upload_dir . $new_file_name;
+
+                if (move_uploaded_file($tmp_name, $destination)) {
+                    $new_images[] = $new_file_name;
+                }
+            }
+        }
     }
 
-    // ==========================================
-    // EXECUTE QUERY
-    // ==========================================
-    
+    // Merge old and new images
+    $all_images = array_merge($current_images, $new_images);
+    $pro_img = !empty($all_images) ? implode(',', $all_images) : '';
+
+    // Update query (Schema Column add kar diya gaya hai)
+    $query = "UPDATE products SET 
+                pro_name = '$pro_name',
+                brand_name = '$brand_name',
+                pro_cate = '$pro_cate',
+                pro_sub_cate = '$pro_sub_cate',
+                short_desc = '$short_desc',
+                description = '$description',
+                new_arrival = '$new_arrival',
+                trending = '$trending',
+                qty = '$qty',
+                mrp = '$mrp',
+                selling_price = '$selling_price',
+                whole_sale_selling_price = '$whole_sale_selling_price',
+                stock = '$stock',
+                pro_img = '$pro_img',
+                meta_title = '$meta_title',
+                meta_desc = '$meta_desc',
+                meta_key = '$meta_key',
+                schema_markup = '$schema_markup',
+                status = '$status',
+                slug_url = '$slug_url'
+              WHERE pro_id = '$pro_id'";
+
     if (mysqli_query($conn, $query)) {
-        echo "<script type='text/javascript'>
-                alert('Product updated successfully!');
-                window.location.href = 'show-products.php';
-              </script>";
-        exit;
+        // Success
+        header("Location: edit_products.php?edit_product_details=$pro_id&success=1");
+        exit();
     } else {
-        echo "Error updating product: " . mysqli_error($conn);
-        echo "<br>Query: " . $query;
+        // Error
+        echo "Error: " . mysqli_error($conn);
+        // You might want to redirect with an error message
+        header("Location: edit_products.php?edit_product_details=$pro_id&error=1");
+        exit();
     }
-
-    mysqli_close($conn);
+} else {
+    header("Location: show-products.php");
+    exit();
 }
 ?>

@@ -7,8 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_category'])) {
     $cat_id = intval($_POST['cat_id']);
     $cate_name = trim($_POST['cate_name']);
     $slug_url = trim($_POST['slug_url']);
-    $display_order = intval($_POST['display_order']);
-    $status = intval($_POST['status']);
+    $status = ($_POST['status'] == 'Active') ? 1 : 0;
 
     // Fetch the existing category to get the old image
     $stmt = $conn->prepare("SELECT image FROM categories WHERE id = ?");
@@ -47,24 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_category'])) {
     }
 
     // Update query
-  $update_query = "UPDATE categories 
-SET categories = ?, 
-    slug_url = ?, 
-    display_order = ?, 
-    status = ?, 
-    image = ? 
-WHERE id = ?";
-
-$stmt = $conn->prepare($update_query);
-$stmt->bind_param(
-    "ssiisi",
-    $cate_name,
-    $slug_url,
-    $display_order,
-    $status,
-    $image_name,
-    $cat_id
-);
+    $update_query = "UPDATE categories SET categories = ?, slug_url = ?, status = ?, image = ? WHERE id = ?";
+    $stmt = $conn->prepare($update_query);
+    $stmt->bind_param("ssisi", $cate_name, $slug_url, $status, $image_name, $cat_id);
 
     if ($stmt->execute()) {
         echo "<script>alert('Category updated successfully!'); window.location.href='view-categories.php';</script>";

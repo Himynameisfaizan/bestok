@@ -1,328 +1,471 @@
 <?php
 include "db-conn.php";
 
-$_GET['id'];
-$product_id = $_GET['id'];
+// Enhanced security function for file validation
+$pro_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if (isset($_GET['del_pro'])) {
+    // Validate and sanitize input
+    $del_pro = intval($_GET['del_pro']);
 
-$sql = "SELECT * FROM `products` where `pro_id` = '$product_id'";
-$res = mysqli_query($conn, $sql);
-if ($res && mysqli_num_rows($res) > 0) {
-    $row = mysqli_fetch_assoc($res);
-    $id = $row['id'];
-} else {
-    die("Product does not exist.");
-}
-
-if(isset($_POST['delete_btn'])){
-    // Get image ID safely
-    $image_id = intval($_POST['image_id']); // Ensures it's an integer
-
-    // Prepared Statement to prevent SQL Injection
-    $stmt = $conn->prepare("DELETE FROM `product_images` WHERE `id` = ?");
-    $stmt->bind_param("i", $image_id);  // "i" means integer binding
-    $res2 = $stmt->execute();
-
-    if($res2){
-        echo "<script>alert('Image Deleted!!');</script>";
-    } else {
-        echo "<script>alert('Image is not deleted');</script>";
+    if ($del_pro <= 0) {
+        die("Invalid image ID.");
     }
 
-    // Close statement
+    // Check if image exists in database
+    $stmt = $conn->prepare("SELECT image_path FROM product_images WHERE id = ?");
+    $stmt->bind_param("i", $del_pro);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        die("Image does not exist.");
+    }
+
+    $row = $result->fetch_assoc();
+    $image_path = $row['image_path'];
+
+    // Delete file from server
+    $base_directory = "assets/img/uploads/";
+    $full_path = $base_directory . $image_path;
+
+    // Security: Prevent directory traversal
+    $full_path = realpath($full_path);
+    $base_directory_real = realpath($base_directory);
+
+    if ($full_path === false || strpos($full_path, $base_directory_real) !== 0) {
+        die("Invalid file path.");
+    }
+
+    if (file_exists($full_path)) {
+        if (unlink($full_path)) {
+            // File deleted successfully, now remove from database
+            $delete_stmt = $conn->prepare("DELETE FROM product_images WHERE id = ?");
+            $delete_stmt->bind_param("i", $del_pro);
+
+            if ($delete_stmt->execute()) {
+                echo "<script>alert('Image deleted successfully!'); window.location.href='show-products.php';</script>";
+            } else {
+                echo "<script>alert('Image removed from server but database deletion failed.');</script>";
+            }
+            $delete_stmt->close();
+        } else {
+            echo "<script>alert('Failed to delete file from server.');</script>";
+        }
+    } else {
+        // File doesn't exist on server, but remove database record anyway
+        $delete_stmt = $conn->prepare("DELETE FROM product_images WHERE id = ?");
+        $delete_stmt->bind_param("i", $del_pro);
+        $delete_stmt->execute();
+        $delete_stmt->close();
+
+        echo "<script>alert('File not found on server, but database record removed.'); window.location.href='show-products.php';</script>";
+    }
+
     $stmt->close();
 }
+function isFileSafe($tmp_name, $name)
+{
+    // Check if file is actually an image
+    $check = getimagesize($tmp_name);
+    if ($check === false) return false;
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Check if files were uploaded
-    // if(isset($_FILES['productImages1'])){
-    //   $file_name = $_FILES['productImages1']['name'];
-    //   $file_size = $_FILES['productImages1']['size'];
-    //   $file_tmp = $_FILES['productImages1']['tmp_name'];
-    //   $file_type = $_FILES['productImages1']['type'];
+    // Whitelist allowed extensions and MIME types
+    $allowedTypes = [
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp'
+    ];
 
-    //   if(move_uploaded_file($file_tmp, "assets/img/uploads/".$file_name)){
-    //     $stmt = $conn->prepare("INSERT INTO product_images (product_id, image_path) VALUES (?, ?)");
-    //     $stmt->execute([$id, $file_name]);
+    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+    if (!array_key_exists($ext, $allowedTypes)) return false;
 
-//         echo "Image uploaded and saved successfully!";
-//       }
-        
-//     } else {
-//         die("No files were uploaded.");
-//     }
-// }
+    // Verify MIME type matches extension
+    $detectedType = mime_content_type($tmp_name);
+    if ($allowedTypes[$ext] !== $detectedType) return false;
+
+    // Check file size (max 10MB)
+    if (filesize($tmp_name) > 10 * 1024 * 1024) return false;
+
+    return true;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = intval($_POST['product_id']);
+
+    // Validate product exists
+    $stmt = $conn->prepare("SELECT id FROM products WHERE pro_id = ?");
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        die("Product does not exist.");
+    }
+
+    $product_row = $result->fetch_assoc();
+    $internal_product_id = $product_row['id'];
+
+    // Count existing images
+    $count_stmt = $conn->prepare("SELECT COUNT(*) as image_count FROM product_images WHERE product_id = ?");
+    $count_stmt->bind_param("i", $internal_product_id);
+    $count_stmt->execute();
+    $count_result = $count_stmt->get_result();
+    $image_count = $count_result->fetch_assoc()['image_count'];
+
+    $uploaded_files = $_FILES['productImages1'];
+    $success_count = 0;
+
+    foreach ($uploaded_files['tmp_name'] as $key => $tmp_name) {
+        // Check maximum images limit
+        if ($image_count >= 5) {
+            echo "<script>alert('Maximum 5 images allowed per product.'); window.history.back();</script>";
+            break;
+        }
+
+        if (isFileSafe($tmp_name, $uploaded_files['name'][$key])) {
+            $ext = strtolower(pathinfo($uploaded_files['name'][$key], PATHINFO_EXTENSION));
+            $newFilename = bin2hex(random_bytes(8)) . '.' . $ext;
+            $target_path = "assets/img/uploads/" . $newFilename;
+
+            if (move_uploaded_file($tmp_name, $target_path)) {
+                // Insert into database with prepared statement
+                $insert_stmt = $conn->prepare("INSERT INTO product_images (product_id, image_path, file_size, mime_type) VALUES (?, ?, ?, ?)");
+                $insert_stmt->bind_param("isis", $internal_product_id, $newFilename, $uploaded_files['size'][$key], mime_content_type($tmp_name));
+
+                if ($insert_stmt->execute()) {
+                    $success_count++;
+                    $image_count++;
+                }
+                $insert_stmt->close();
+            }
+        }
+    }
+
+    if ($success_count > 0) {
+        echo "<script>alert('Successfully uploaded {$success_count} images!'); window.location.href='add-more-image.php?id={$product_id}';</script>";
+    } else {
+        echo "<script>alert('No images were uploaded. Please check file types and try again.'); window.history.back();</script>";
+    }
+
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="zxx">
 
-<!-- Mirrored from demo.dashboardpack.com/sales-html/themefy_icon.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 16 Apr 2023 14:08:14 GMT -->
-
 <head>
-
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Sales</title>
+    <title>Product Image Management</title>
     <link rel="icon" href="assets/img/logo.png" type="image/png">
-
     <?php include "links.php"; ?>
+    <style>
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #007bff;
+            background: #e7f3ff;
+        }
+
+        .image-preview-container {
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .image-preview-container:hover {
+            transform: scale(1.05);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-preview-container:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .progress {
+            height: 8px;
+        }
+    </style>
 </head>
 
 <body class="crm_body_bg">
+    <?php include "header.php"; ?>
 
-<?php  include "header.php"; ?>
     <section class="main_content dashboard_part large_header_bg">
-
         <div class="container-fluid g-0">
             <div class="row">
-                <div class="col-lg-12 p-0 ">
-                    <div class="header_iner d-flex justify-content-between align-items-center">
-                        <div class="sidebar_icon d-lg-none">
-                            <i class="ti-menu"></i>
-                        </div>
-                        <div class="serach_field-area d-flex align-items-center">
-                            <div class="search_inner">
-                                <form action="#">
-                                    <div class="search_field">
-                                        <input type="text" placeholder="Search here...">
-                                    </div>
-                                    <button type="submit"> <img src="assets/img/icon/icon_search.svg" alt> </button>
-                                </form>
-                            </div>
-                            <span class="f_s_14 f_w_400 ml_25 white_text text_white">Apps</span>
-                        </div>
-                        <div class="header_right d-flex justify-content-between align-items-center">
-                            <div class="header_notification_warp d-flex align-items-center">
-                                <li>
-                                    <a class="bell_notification_clicker nav-link-notify" href="#"> <img src="assets/img/icon/bell.svg" alt>
-                                    </a>
-
-                                    <div class="Menu_NOtification_Wrap">
-                                        <div class="notification_Header">
-                                            <h4>Notifications</h4>
-                                        </div>
-                                        <div class="Notification_body">
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="assets/img/staf/2.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>Cool Marketing </h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="assets/img/staf/4.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>Awesome packages</h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="assets/img/staf/3.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>what a packages</h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="assets/img/staf/2.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>Cool Marketing </h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="assets/img/staf/4.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>Awesome packages</h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="assets/img/staf/3.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>what a packages</h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="nofity_footer">
-                                            <div class="submit_button text-center pt_20">
-                                                <a href="#" class="btn_1">See More</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </li>
-                                <li>
-                                    <a class="CHATBOX_open nav-link-notify" href="#"> <img src="assets/img/icon/msg.svg" alt> </a>
-                                </li>
-                            </div>
-                            <div class="profile_info">
-                                <img src="assets/img/client_img.png" alt="#">
-                                <div class="profile_info_iner">
-                                    <div class="profile_author_name">
-                                        <p>Neurologist </p>
-                                        <h5>Dr. Robar Smith</h5>
-                                    </div>
-                                    <div class="profile_info_details">
-                                        <a href="#">My Profile </a>
-                                        <a href="#">Settings</a>
-                                        <a href="#">Log Out </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-lg-12 p-0">
+                    <?php include "top_nav.php"; ?>
                 </div>
             </div>
         </div>
 
         <div class="main_content_iner ">
-            <div class="container-fluid p-0">
+            <div class="container-fluid p-3">
                 <div class="row justify-content-center">
                     <div class="col-lg-12">
                         <div class="white_card card_height_100 mb_30">
                             <div class="white_card_header">
                                 <div class="box_header m-0">
                                     <div class="main-title">
-                                        <h3 class="m-0">Category Data</h3>
+                                        <h2 class="mb-0 fw-bold">Manage Product Images</h2>
+                                        <p class="text-muted mb-0">Upload and manage product gallery images</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="white_card_body">
-                                <div class="QA_section">
-                                    <div class="white_box_tittle list_header">
-                                        <div class="box_right d-flex lms_block">
-                                            <!-- <div class="serach_field_2">
-                                                <div class="search_inner">
-                                                    <form active="#">
-                                                        <div class="search_field">
-                                                            <input type="text" placeholder="Search content here...">
+                                <!-- Upload Section -->
+                                <div class="row mb-5">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="mb-0"><i class="ti-cloud-up me-2"></i>Upload New Images</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <form action="upload.php" method="POST" enctype="multipart/form-data" id="uploadForm">
+                                                    <input type="hidden" name="product_id" value="<?= $pro_id ?>">
+
+                                                    <div class="upload-area border-dashed p-5 text-center mb-3" id="uploadArea">
+                                                        <i class="ti-cloud-up display-4 text-muted d-block mb-3"></i>
+                                                        <h5>Drag & Drop your images here</h5>
+                                                        <p class="text-muted">or click to browse</p>
+                                                        <small class="text-muted d-block">Supports JPG, PNG, GIF, WEBP (Max 5 files total, 10MB each)</small>
+
+                                                        <input type="file" class="form-control d-none" name="productImages1[]" id="productImages"
+                                                            multiple accept="image/jpeg,image/png,image/gif,image/webp" />
+                                                    </div>
+
+                                                    <!-- Image Preview -->
+                                                    <div class="row g-3 mt-3" id="imagePreview"></div>
+
+                                                    <!-- Upload Feedback -->
+                                                    <div class="alert alert-info mt-3 d-none" id="uploadFeedback">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                                            <span>Ready to upload <span id="fileCount">0</span> files</span>
                                                         </div>
-                                                        <button type="submit"> <i class="ti-search"></i> </button>
-                                                    </form>
-                                                </div>
-                                            </div> -->
-                                            <div class="add_button ms-2">
-                                                <a href="show-products.php" data-bs-toggle="modal" data-bs-target="#addcategory"
-                                                    class="btn_1">Back to Product</a>
+                                                        <div class="progress mt-2">
+                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                role="progressbar" style="width: 0%"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary mt-3" id="uploadBtn" disabled>
+                                                        <i class="ti-upload me-2"></i>Upload Images
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="QA_table mb_30">
+                                </div>
 
-                                    <form action="upload.php" method="POST" enctype="multipart/form-data">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label" for="productImages">Upload Product Images (Max 5)</label>
-                                        
-                                        <!-- FIXED: Correct Hidden Input -->
-                                        <input type="hidden" name="product_id" value="<?=$id?>">
+                                <!-- Existing Images Section -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header bg-success text-white">
+                                                <h5 class="mb-0"><i class="ti-gallery me-2"></i>Existing Product Images</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <?php
+                                                $product_id = 1; 
+                                                $query = "SELECT pro_img FROM products WHERE pro_id = ?";
+                                                $stmt = $conn->prepare($query);
+                                                $stmt->bind_param("i", $pro_id);
+                                                $stmt->execute();
+                                                $result = $stmt->get_result();
 
-                                        <!-- FIXED: Use name="productImages1[]" for multiple uploads -->
-                                        <input type="file" class="form-control" name="productImages1[]" id="productImages" multiple accept="image/*" />
-                                        
-                                        <small>You can upload up to 4 images.</small>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Upload Images</button>
-                                </form>
+                                                if ($result && $result->num_rows > 0) {
+                                                    $row = $result->fetch_assoc();
+
+                                                    if (!empty($row['pro_img'])) {
+
+                                                        $image_path = htmlspecialchars($row['pro_img']); 
+                                                        $uploaded_at = !empty($row['added_on']) ? date('M j, Y g:i A', strtotime($row['added_on'])) : 'N/A'; // Date ke liye
+
+                                                        echo '<div class="table-responsive">';
+                                                        echo '<table class="table table-hover">';
+                                                        echo '<thead class="table-light">';
+                                                        echo '<tr><th>#</th><th>Preview</th><th>Filename</th><th>Uploaded</th><th>Actions</th></tr>';
+                                                        echo '</thead><tbody>';
+
+                                                        echo "<tr>";
+                                                        echo "<td>1</td>";
+                                                        echo "<td>";
+                                                        echo "<img src='assets/img/uploads/{$image_path}' class='img-thumbnail' 
+                  style='width: 80px; height: 80px; object-fit: cover; cursor: pointer;' 
+                  data-bs-toggle='modal' data-bs-target='#imageModal' 
+                  onclick='openImageModal(\"assets/img/uploads/{$image_path}\")'>";
+                                                        echo "</td>";
+                                                        echo "<td class='text-truncate' style='max-width: 200px;'>{$image_path}</td>";
+                                                        echo "<td>{$uploaded_at}</td>";
+                                                        echo "<td>";
+                                                        echo "<i class='ti-trash me-1'></i>Delete";
+                                                        echo "</a>";
+                                                        echo "</td>";
+                                                        echo "</tr>";
+
+                                                        echo '</tbody></table></div>';
+                                                    } else {
+                                                        echo '<div class="text-center py-4">';
+                                                        echo '<i class="ti-gallery display-4 text-muted d-block mb-3"></i>';
+                                                        echo '<h5 class="text-muted">No image uploaded yet</h5>';
+                                                        echo '<p class="text-muted">Upload a product image using the form above.</p>';
+                                                        echo '</div>';
+                                                    }
+                                                } else {
+                                                    echo '<div class="text-center py-4">';
+                                                    echo '<i class="ti-gallery display-4 text-muted d-block mb-3"></i>';
+                                                    echo '<h5 class="text-muted">No image found</h5>';
+                                                    echo '<p class="text-muted">Upload your product image using the form above.</p>';
+                                                    echo '</div>';
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <h2>Uploaded Images</h2>
-                        <?php
-                        // Fetch product images from the database
-                       // Fetch product images from the database
-                            $product_id = 1; // Replace with the actual product ID
-                            $query = "SELECT * FROM product_images WHERE product_id = $id";
-                            $result = mysqli_query($conn, $query);
+                </div>
+            </div>
+        </div>
 
-                           // Display the images with delete button and full-screen option
-                             $sno = 1;
-                            if ($result && mysqli_num_rows($result) > 0) {
-                               
-                                   ?>
-                                   <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Image </th>
-                                            <th scope="col">Delete</th>
-                                            <th scope="col">Handle</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                             while ($row = mysqli_fetch_assoc($result)) {
-                                                $image_id = $row['id'];
-                                                $image_path = htmlspecialchars($row['image_path']);
-                                            ?>
-                                            <tr>
-                                            <th scope="row"><?=$sno++;?></th>
-                                            <td>
-                                            <img src="assets/img/uploads/<?=$image_path ?>" style="height: 80px; width: 80px; cursor: pointer;">
-                                            </td>
-                                            <td>
-                                            <form action="" method="post">
-                                                <input type="hidden" name="image_id" value="<?=$image_id?>">
-                                                <button class="btn btn-danger" type="submit" name="delete_btn">Delete</button>
-                                            </form>
-                                            </td>
-                                            <td>@mdo</td>
-                                            </tr>
-                                            <?php   } ?>
-                                        </tbody>        
-                                   </table>
-                                   
-                              <?php
-                            } else {
-                                echo "No images found.";
-                            }
-
-                            // Close the connection
-                            mysqli_close($conn);
-                        ?>
+        <!-- Image Modal -->
+        <div class="modal fade" id="imageModal" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Image Preview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="" id="modalImage" class="img-fluid" style="max-height: 70vh;">
                     </div>
                 </div>
             </div>
         </div>
 
-       <?php  include "footer.php"; ?>
+        <?php include "footer.php"; ?>
+    </section>
 
-       <?php
+    <script>
+        // Enhanced JavaScript for better UX
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('productImages');
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadFeedback = document.getElementById('uploadFeedback');
+        const fileCount = document.getElementById('fileCount');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadForm = document.getElementById('uploadForm');
 
-       ?>
-   
+        // Drag and drop functionality
+        uploadArea.addEventListener('click', () => fileInput.click());
 
- 
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            handleFileSelection();
+        });
+
+        fileInput.addEventListener('change', handleFileSelection);
+
+        function handleFileSelection() {
+            const files = fileInput.files;
+            imagePreview.innerHTML = '';
+            uploadFeedback.classList.add('d-none');
+            uploadBtn.disabled = true;
+
+            if (files.length > 5) {
+                alert('Maximum 5 files allowed. Please select fewer files.');
+                fileInput.value = '';
+                return;
+            }
+
+            let validFiles = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                if (!files[i].type.match('image.*')) {
+                    alert('Only image files are allowed.');
+                    fileInput.value = '';
+                    return;
+                }
+
+                if (files[i].size > 10 * 1024 * 1024) {
+                    alert('File size must be less than 10MB.');
+                    fileInput.value = '';
+                    return;
+                }
+
+                validFiles++;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-3 col-6';
+                    col.innerHTML = `
+                        <div class="image-preview-container">
+                            <img src="${e.target.result}" class="img-thumbnail w-100" 
+                                 style="height: 120px; object-fit: cover;">
+                            <button type="button" class="btn btn-sm btn-danger delete-btn" 
+                                    onclick="this.parentElement.parentElement.remove(); updateFileInput();">
+                                <i class="ti-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    imagePreview.appendChild(col);
+                }
+                reader.readAsDataURL(files[i]);
+            }
+
+            if (validFiles > 0) {
+                fileCount.textContent = validFiles;
+                uploadFeedback.classList.remove('d-none');
+                uploadBtn.disabled = false;
+            }
+        }
+
+        function updateFileInput() {
+            // This would require more complex logic to actually update the file input
+            // For simplicity, we'll just enable the button if there are previews
+            uploadBtn.disabled = imagePreview.children.length === 0;
+        }
+
+        function openImageModal(src) {
+            document.getElementById('modalImage').src = src;
+        }
+
+        // Form submission feedback
+        uploadForm.addEventListener('submit', function() {
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="ti-loading me-2"></i>Uploading...';
+        });
+    </script>
+</body>
+
+</html>

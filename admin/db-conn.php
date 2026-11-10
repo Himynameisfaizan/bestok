@@ -4,13 +4,13 @@ error_reporting(E_ALL);
 
 
 // Database Configuration
-$local = false; // Set to false for live server
+$local = true; // Set to false for live server
 
 if ($local) {
     $host = 'localhost';
     $username = 'root';
     $password = '';
-    $dbName = 'u799879276_bestok';
+    $dbName = 'bestok';
     $site = "http://localhost/projects/bestok/";
 } else {
     $host = 'localhost';

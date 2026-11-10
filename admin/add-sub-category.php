@@ -1,201 +1,247 @@
 <?php
 include "db-conn.php";
 
+// Start session at the very top
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $sql = "SELECT * FROM `categories` ORDER BY id DESC";
 $check = mysqli_query($conn, $sql);
-?>
 
-
-<?php
 function SlugUrl($string)
 {
     $slug = preg_replace('/[^a-zA-Z0-9 -]/', '', $string);
-    $slug = str_replace('', '-', $slug);
+    $slug = str_replace(' ', '-', $slug);
     $slug = strtolower($slug);
-    return ($slug);
+    return $slug;
 }
-
-// if (isset($_POST["add-sub-categories"])) {
-
-//     $cate_id = mt_rand(11111, 99999);
-//     $cate_name = $_POST["cate_name"];
-//     $meta_title = $_POST["meta_title"];
-//     $meta_key = $_POST["meta_key"];
-//     $meta_desc = $_POST["meta_desc"];
-//     $added_on = date('M d, Y');
-//     $parent_id = $_POST['parent_id'];
-//     $slug_url = SlugUrl($cate_name);
-
-//     $sql = "INSERT INTO `sub_categories`( `parent_id`,`cate_id`, `categories`, `meta_title`, `meta_desc`, `meta_key`, `slug_url`, `status`, `added_on`) VALUES ('$parent_id','$cate_id','$cate_name','$meta_title','$meta_desc','$meta_key','$slug_url',1,'$added_on')";
-
-//     $check = mysqli_query($conn, $sql);
-//     if ($check) {
-?>
-<!-- <script type="text/javascript">
-            alert('Inserted Successfully!'); -->
-<!-- // window.location.href = "view-sub-categories.php";
-        </script> -->
-<?php
-//     }
-// }
 ?>
 <!DOCTYPE html>
-<html lang="zxx">
-
-<!-- Mirrored from demo.dashboardpack.com/sales-html/themefy_icon.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 16 Apr 2023 14:08:14 GMT -->
+<html lang="en">
 
 <head>
-
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Sales</title>
+    <title>Add Sub Category | Admin Panel</title>
     <link rel="icon" href="img/logo.png" type="image/png">
 
     <?php include "links.php"; ?>
+    <style>
+        .form-section {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border-radius: 6px;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .form-control:focus {
+            border-color: #7367f0;
+            box-shadow: 0 0 0 3px rgba(115, 103, 240, .15);
+        }
+
+        .card-header {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 20px 30px;
+        }
+
+        .main-title h2 {
+            color: #2c2c2c;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: rgba(14, 18, 230, 0.84);
+            border-color: #7367f0;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            background-color: #5d50e6;
+            border-color: #5d50e6;
+        }
+
+        .preview-image {
+            max-width: 150px;
+            max-height: 150px;
+            margin-top: 15px;
+            border-radius: 4px;
+            border: 1px dashed #ddd;
+            padding: 5px;
+            display: none;
+        }
+    </style>
 </head>
 
 <body class="crm_body_bg">
 
     <?php include "header.php"; ?>
-    <section class="main_content dashboard_part large_header_bg">
 
+    <section class="main_content dashboard_part">
+        <div class="container-fluid g-0">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <?php include "top_nav.php"; ?>
+                </div>
+            </div>
+        </div>
 
-        <div class="main_content_iner ">
-            <div class="container-fluid p-0 sm_padding_15px">
+        <div class="main_content_iner">
+            <div class="container-fluid">
                 <div class="row justify-content-center">
+
                     <div class="col-lg-12">
-                        <div class="main_content_iner">
-                            <div class="container-fluid p-0 sm_padding_15px">
-                                <div class="row justify-content-center">
-
-
-                                    <div class="col-lg-12">
-                                        <div class="white_card card_height_100 mb_30">
-                                            <div class="white_card_header">
-                                                <div class="box_header m-0">
-                                                    <div class="main-title">
-                                                        <h2 class="m-0">Add Sub Category Details</h2>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="white_card_body">
-                                                <div class="card-body">
-                                                    <form id="myform" action="functions.php" method="post"
-                                                        enctype="multipart/form-data">
-                                                        <div class="row g-4">
-                                                            <!-- Parent Category -->
-                                                            <div class="col-md-6 col-lg-6">
-                                                                <label class="form-label" for="parentCategory">Parent
-                                                                    Category Name</label>
-                                                                <select class="form-control" name="parent_id"
-                                                                    id="parentCategory" required>
-                                                                    <option value="">-- Select --</option>
-                                                                    <?php foreach ($check as $val) { ?>
-                                                                        <option value="<?= $val['cate_id'] ?>">
-                                                                            <?= ucwords($val['categories']) ?>
-                                                                        </option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                            </div>
-
-                                                            <!-- Sub Category Name -->
-                                                            <div class="col-md-6 col-lg-6">
-                                                                <label class="form-label" for="subCategory">Sub Category
-                                                                    Name</label>
-                                                                <input type="text" class="form-control" name="cate_name"
-                                                                    id="subCategory" placeholder="Enter category name"
-                                                                    required />
-                                                            </div>
-
-                                                            <!-- Meta Title & Keywords -->
-                                                            <div class="col-md-6 col-lg-6">
-                                                                <label class="form-label" for="metaTitle">Meta
-                                                                    Title</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="meta_title" id="metaTitle"
-                                                                    placeholder="Meta Title" />
-                                                            </div>
-
-                                                            <div class="col-md-6 col-lg-6">
-                                                                <label class="form-label" for="metaKeyword">Meta
-                                                                    Keyword</label>
-                                                                <input type="text" class="form-control" name="meta_key"
-                                                                    id="metaKeyword" placeholder="Meta Keyword" />
-                                                            </div>
-
-                                                            <!-- Meta Description -->
-                                                            <div class="col-md-12 col-lg-6">
-                                                                <label class="form-label" for="metaDescription">Meta
-                                                                    Description</label>
-                                                                <textarea class="form-control" name="meta_desc"
-                                                                    id="metaDescription" placeholder="Meta Description"
-                                                                    rows="3"></textarea>
-                                                            </div>
-
-                                                            <!-- Sub Category Image -->
-                                                            <div class="col-md-6 col-lg-6">
-                                                                <label class="form-label" for="imageUpload">Sub Category
-                                                                    Image</label>
-                                                                <input type="file" class="form-control"
-                                                                    name="imageUpload" id="imageUpload"
-                                                                    accept="image/*" />
-                                                            </div>
-
-                                                            <!-- Status -->
-                                                            <div class="col-md-6 col-lg-6">
-                                                                <label class="form-label" for="status">Status</label>
-                                                                <select id="status" name="status" class="form-control"
-                                                                    required>
-                                                                    <option value="1">Active</option>
-                                                                    <option value="0">Deactive</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="col-md-6 col-lg-6">
-    <label class="form-label" for="display_order">Display Order</label>
-    <input type="number"
-           class="form-control"
-           name="display_order"
-           id="display_order"
-           placeholder="Enter Display Order"
-           value="1"
-           min="1"
-           required>
-</div>
-
-                                                        <!-- Submit Button -->
-                                                        <div class="text-center mt-4">
-                                                            <button type="submit" class="btn btn-primary px-5"
-                                                                name="add-sub-categories">
-                                                                Add Category
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="card-header bg-white border-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2 class="mb-0">Add Sub Category</h2>
+                                    <p class="text-muted mb-0 small">Manage your product Sub Categories</p>
+                                </div>
+                                <div>
+                                    <a href="view-sub-categories.php" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#addcategory">
+                                        <i class="fas fa-plus me-2"></i>View Sub Category
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="form-section">
+                            <form id="subCategoryForm" action="functions.php" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <!-- Parent Category -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Parent Category <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="parent_id" required>
+                                            <option value="" selected disabled>Select Parent Category</option>
+                                            <?php while ($row = mysqli_fetch_assoc($check)): ?>
+                                                <option value="<?= $row['cate_id'] ?>"><?= htmlspecialchars($row['categories']) ?></option>
+                                            <?php endwhile; ?>
+                                        </select>
+                                    </div>
 
+                                    <!-- Sub Category Name -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Sub Category Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="cate_name" placeholder="Enter sub category name" required>
+                                    </div>
+
+                                    <!-- Meta Title -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Meta Title</label>
+                                        <input type="text" class="form-control" name="meta_title" placeholder="Meta title for SEO">
+                                        <small class="text-muted">Recommended: 50-60 characters</small>
+                                    </div>
+
+                                    <!-- Meta Keywords -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Meta Keywords</label>
+                                        <input type="text" class="form-control" name="meta_key" placeholder="Comma separated keywords">
+                                    </div>
+
+                                    <!-- Meta Description -->
+                                    <div class="col-md-12 mb-4">
+                                        <label class="form-label">Meta Description</label>
+                                        <textarea class="form-control" name="meta_desc" rows="3" placeholder="Meta description for SEO"></textarea>
+                                        <small class="text-muted">Recommended: 150-160 characters</small>
+                                    </div>
+
+                                    <!-- Schema Markup Box (Add sub-category form ke andar Meta Description ke niche add karein) -->
+                                    <div class="col-md-12 mb-4">
+                                        <label class="form-label fw-bold">SEO Schema Markup (JSON-LD)</label>
+                                        <textarea class="form-control" name="schema_markup" rows="6" placeholder="Paste full <script type='application/ld+json'>...</script> here..."></textarea>
+                                        <small class="text-muted">Enter custom schema markup for this sub-category.</small>
+                                    </div>
+
+                                    <!-- Image Upload -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Category Image</label>
+                                        <input type="file" class="form-control" name="imageUpload" id="imageUpload" accept="image/*">
+                                        <img id="imagePreview" src="#" alt="Preview" class="preview-image">
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-select" name="status">
+                                            <option value="1" selected>Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="col-12 mt-3">
+                                        <button type="submit" class="btn btn-primary" name="add-sub-categories">
+                                            <i class="fas fa-plus me-2"></i> Add Sub Category
+                                        </button>
+                                        <a href="categories.php" class="btn btn-outline-secondary ms-2">
+                                            <i class="fas fa-times me-2"></i> Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <?php include "footer.php"; ?>
 
-
         <script>
-            const form = document.getElementById('myForm');
+            // Image preview functionality
+            document.getElementById('imageUpload').addEventListener('change', function(e) {
+                const preview = document.getElementById('imagePreview');
+                const file = e.target.files[0];
+                const reader = new FileReader();
 
-            form.addEventListener('submit', function (event) {
-                const select = document.getElementById('category');
-                if (!select.value) {
-                    alert('Please select a valid category.');
-                    event.preventDefault(); // Prevent form submission
+                reader.onload = function(e) {
+                    preview.style.display = 'block';
+                    preview.src = e.target.result;
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
                 }
             });
+
+            // Form validation
+            document.getElementById('subCategoryForm').addEventListener('submit', function(e) {
+                const parentCategory = document.querySelector('[name="parent_id"]');
+                const categoryName = document.querySelector('[name="cate_name"]');
+
+                if (!parentCategory.value) {
+                    e.preventDefault();
+                    alert('Please select a parent category');
+                    parentCategory.focus();
+                    return false;
+                }
+
+                if (!categoryName.value.trim()) {
+                    e.preventDefault();
+                    alert('Please enter a sub category name');
+                    categoryName.focus();
+                    return false;
+                }
+
+                return true;
+            });
         </script>
+</body>
+
+</html>

@@ -3,8 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: auth/login.php");
-    exit();
+  header("Location: auth/login.php");
+  exit();
 }
 include "db-conn.php";
 ?>
@@ -132,7 +132,9 @@ include "db-conn.php";
       <div class="container-fluid g-0">
         <div class="row">
           <div class="col-lg-12 p-0">
-            <?php include "top_nav.php"; ?>
+            <?php
+            include "top_nav.php";
+            ?>
           </div>
         </div>
       </div>
@@ -149,28 +151,28 @@ include "db-conn.php";
           $total_products = 0;
 
           // Revenue (assuming we have orders data)
-          $sql_orders = "SELECT SUM(order_total) as total FROM orders_new WHERE status = 'completed'";
+          $sql_orders = "SELECT COUNT(*) as count FROM gallery";
           $res_orders = mysqli_query($conn, $sql_orders);
           if ($res_orders) {
             $row = mysqli_fetch_assoc($res_orders);
-            $total_revenue = $row['total'] ? $row['total'] : 0;
+            $total_revenue = $row['count'];
           }
 
           // Total orders
-          $sql_order_count = "SELECT COUNT(*) as count FROM orders_new";
-          $res_order_count = mysqli_query($conn, $sql_order_count);
-          if ($res_order_count) {
-            $row = mysqli_fetch_assoc($res_order_count);
-            $total_orders = $row['count'];
-          }
+          // $sql_order_count = "SELECT COUNT(*) as count FROM testimonials";
+          // $res_order_count = mysqli_query($conn, $sql_order_count);
+          // if ($res_order_count) {
+          //   $row = mysqli_fetch_assoc($res_order_count);
+          //   $total_orders = $row['count'];
+          // }
 
           // Total customers
-          $sql_cust = "SELECT COUNT(*) as count FROM users";
-          $res_cust = mysqli_query($conn, $sql_cust);
-          if ($res_cust) {
-            $row = mysqli_fetch_assoc($res_cust);
-            $total_customers = $row['count'];
-          }
+          // $sql_cust = "SELECT COUNT(*) as count FROM users";
+          // $res_cust = mysqli_query($conn, $sql_cust);
+          // if ($res_cust) {
+          //   $row = mysqli_fetch_assoc($res_cust);
+          //   $total_customers = $row['count'];
+          // }
 
           // Total products
           $sql_pro = "SELECT COUNT(*) as count FROM products";
@@ -190,20 +192,22 @@ include "db-conn.php";
                 <div class="row no-gutters align-items-center">
                   <div class="col me-2">
                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                      Total Revenue</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">₹<?= number_format($total_revenue, 2) ?></div>
+                      Total Gallery Images
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_revenue ?></div>
                     <div class="mt-2 mb-0 text-muted text-xs">
                       <span class="text-success me-2"><i class="fas fa-arrow-up me-1"></i> 12%</span>
                       <span>Since last month</span>
                     </div>
                   </div>
                   <div class="col-auto">
-                    <i class="fas fa-dollar-sign card-icon text-primary"></i>
+                    <i class="fas fa-image card-icon text-primary"></i>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
 
           <!-- Orders Card -->
           <div class="col-xl-3 col-md-6 mb-4">
@@ -212,7 +216,7 @@ include "db-conn.php";
                 <div class="row no-gutters align-items-center">
                   <div class="col me-2">
                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                      Total Orders</div>
+                      Testimonials</div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_orders ?></div>
                     <div class="mt-2 mb-0 text-muted text-xs">
                       <span class="text-success me-2"><i class="fas fa-arrow-up me-1"></i> 8%</span>
@@ -328,54 +332,71 @@ include "db-conn.php";
         </div>
 
 
+
         <!-- Content Row -->
         <div class="row">
           <!-- Recent Orders -->
           <div class="col-lg-8 mb-4">
-            <div class="card shadow mb-4">
-              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Recent Orders</h6>
-                <a href="orders.php" class="btn btn-sm btn-primary">View All</a>
+            <!-- Recent Activity -->
+            <div class="card shadow">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
               </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <thead class="table-light">
-                      <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php
-                      $sql_recent_orders = "SELECT * FROM orders_new ORDER BY created_at DESC LIMIT 5";
-                      $res_recent_orders = mysqli_query($conn, $sql_recent_orders);
-                      while ($order = mysqli_fetch_assoc($res_recent_orders)) {
-                        $status_class = '';
-                        if ($order['status'] == 'completed')
-                          $status_class = 'success';
-                        elseif ($order['status'] == 'pending')
-                          $status_class = 'warning';
-                        else
-                          $status_class = 'danger';
+              <div class="card-body activity-feed">
+                <?php
+                // Get recent activities from different tables
+                $activities = array();
 
-                        echo "<tr>
-                          <td>#{$order['order_id']}</td>
-                          <td>{$order['first_name']} {$order['last_name']}</td>
-                          <td>" . date('M d, Y', strtotime($order['created_at'])) . "</td>
-                          <td>₹{$order['order_total']}</td>
-                          <td><span class='badge bg-{$status_class}'>{$order['status']}</span></td>
-                          <td><a href='order-details.php?id={$order['id']}' class='btn btn-sm btn-outline-primary'>View</a></td>
-                        </tr>";
-                      }
-                      ?>
-                    </tbody>
-                  </table>
-                </div>
+                // Get recent blog activities
+                $sql_blogs = "SELECT 'blog' as type, title as description, created_at FROM blogs ORDER BY created_at DESC LIMIT 2";
+                $res_blogs = mysqli_query($conn, $sql_blogs);
+                while ($blog = mysqli_fetch_assoc($res_blogs)) {
+                  $activities[] = $blog;
+                }
+
+                // Get recent product activities
+                $sql_products = "SELECT 'product' as type, pro_name as description, added_on as created_at FROM products ORDER BY added_on DESC LIMIT 2";
+                $res_products = mysqli_query($conn, $sql_products);
+                while ($product = mysqli_fetch_assoc($res_products)) {
+                  $activities[] = $product;
+                }
+
+                // Get recent inquiries
+                $sql_inquiries = "SELECT 'inquiry' as type, CONCAT('New inquiry from ', name) as description, created_at FROM inquiries ORDER BY created_at DESC LIMIT 2";
+                $res_inquiries = mysqli_query($conn, $sql_inquiries);
+                while ($inquiry = mysqli_fetch_assoc($res_inquiries)) {
+                  $activities[] = $inquiry;
+                }
+
+                // Sort activities by date
+                usort($activities, function ($a, $b) {
+                  return strtotime($b['created_at']) - strtotime($a['created_at']);
+                });
+
+                // Display activities
+                foreach (array_slice($activities, 0, 4) as $activity) {
+                  $icon = '';
+                  $color = '';
+                  if ($activity['type'] == 'blog') {
+                    $icon = 'fa-pen';
+                    $color = 'primary';
+                  } elseif ($activity['type'] == 'product') {
+                    $icon = 'fa-box';
+                    $color = 'success';
+                  } else {
+                    $icon = 'fa-envelope';
+                    $color = 'info';
+                  }
+
+                  echo "<div class='activity-item'>
+                    <div class='d-flex justify-content-between'>
+                      <strong>{$activity['description']}</strong>
+                      <span class='badge bg-{$color}'>" . ucfirst($activity['type']) . "</span>
+                    </div>
+                    <p class='activity-time mb-0'><i class='fas fa-clock me-1'></i>" . date('M j, Y g:i A', strtotime($activity['created_at'])) . "</p>
+                  </div>";
+                }
+                ?>
               </div>
             </div>
           </div>
@@ -421,7 +442,7 @@ include "db-conn.php";
               </div>
             </div>
 
-            <!-- Recent Activity -->
+
           </div>
         </div>
 

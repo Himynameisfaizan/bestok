@@ -9,7 +9,7 @@ if (isset($_GET['id'])) {
     $delete = mysqli_query($conn, $sql);
 
     if ($delete) {
-        echo "<script>alert('Category deleted successfully'); window.location.href='view-categories.php';</script>";
+        echo "<script> window.location.href='view-categories.php';</script>";
     } else {
         echo "<script>alert('Error deleting category'); window.location.href='view-categories.php';</script>";
     }
