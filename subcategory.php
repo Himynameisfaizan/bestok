@@ -11,7 +11,7 @@ if (!isset($site)) {
 
 // 1. GET ROUTE SLUG PARAMETER FROM HTACCESS RULE (Fixed from 'subcat' to 'slug')
 if (!isset($_GET['slug']) || empty($_GET['slug'])) {
-    header("Location: " . $site . "index.php");
+    header("Location: " . $site . "404.php");
     exit();
 }
 
@@ -22,7 +22,7 @@ $sub_master_query = "SELECT * FROM `sub_categories` WHERE `slug_url` = '$subcat_
 $sub_master_res   = mysqli_query($conn, $sub_master_query);
 
 if (!$sub_master_res || mysqli_num_rows($sub_master_res) == 0) {
-    header("Location: " . $site . "index.php");
+    header("Location: " . $site . "404.php");
     exit();
 }
 
@@ -62,92 +62,92 @@ $meta_key          = htmlspecialchars($sub_row['meta_key'] ?? '');
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <style>
-        /* 💎 GRID DESIGN ALIGNMENT & MODERN CARD HOVER STYLING */
-        .product-box-card {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s ease;
-        }
+    /* 💎 GRID DESIGN ALIGNMENT & MODERN CARD HOVER STYLING */
+    .product-box-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+    }
 
-        .product-box-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            border-color: #cbd5e1;
-        }
+    .product-box-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+    }
 
-        .product-box-img {
-            height: 200px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-bottom: 15px;
-            background: #fafafa;
-            border-radius: 8px;
-        }
+    .product-box-img {
+        height: 200px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 15px;
+        background: #fafafa;
+        border-radius: 8px;
+    }
 
-        .product-box-img img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.4s ease;
-        }
+    .product-box-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.4s ease;
+    }
 
-        .product-box-card:hover .product-box-img img {
-            transform: scale(1.05);
-        }
+    .product-box-card:hover .product-box-img img {
+        transform: scale(1.05);
+    }
 
-        .product-box-card h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 10px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            height: 44px;
-            line-height: 1.4;
-            text-transform: uppercase;
-        }
+    .product-box-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 44px;
+        line-height: 1.4;
+        text-transform: uppercase;
+    }
 
-        .product-short-text-wrap {
-            font-size: 13px;
-            color: #64748b;
-            line-height: 1.6;
-            height: 63px;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            margin-bottom: 15px;
-        }
+    .product-short-text-wrap {
+        font-size: 13px;
+        color: #64748b;
+        line-height: 1.6;
+        height: 63px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        margin-bottom: 15px;
+    }
 
-        .product-box-btn {
-            margin-top: auto;
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: #13345d;
-            color: #fff !important;
-            font-weight: 600;
-            font-size: 13px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: background 0.2s;
-        }
+    .product-box-btn {
+        margin-top: auto;
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: #13345d;
+        color: #fff !important;
+        font-weight: 600;
+        font-size: 13px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: background 0.2s;
+    }
 
-        .product-box-btn:hover {
-            background: #0d2544;
-        }
+    .product-box-btn:hover {
+        background: #0d2544;
+    }
     </style>
 </head>
 
@@ -161,7 +161,8 @@ $meta_key          = htmlspecialchars($sub_row['meta_key'] ?? '');
             <div class="container">
                 <h2 class="breadcrumb-title"><?= $subcat_title ?></h2>
                 <ul class="breadcrumb-menu">
-                    <li><a href="<?= $site ?>index.php">Home</a> <i class="fa fa-angle-double-right" aria-hidden="true"></i></li>
+                    <li><a href="<?= $site ?>index.php">Home</a> <i class="fa fa-angle-double-right"
+                            aria-hidden="true"></i></li>
                     <li class="active"><?= $subcat_title ?></li>
                 </ul>
             </div>
@@ -171,7 +172,8 @@ $meta_key          = htmlspecialchars($sub_row['meta_key'] ?? '');
             <div class="container">
                 <div class="sec-title2 text-center mb-45">
                     <h2 class="title title2">Products and Solutions</h2>
-                    <p>Discover powerful and reliable products crafted to deliver smart, efficient, and effective solutions for your business needs in <?= $subcat_title ?>.</p>
+                    <p>Discover powerful and reliable products crafted to deliver smart, efficient, and effective
+                        solutions for your business needs in <?= $subcat_title ?>.</p>
                     <div class="heading-divider"></div>
                 </div>
 
@@ -208,22 +210,23 @@ $meta_key          = htmlspecialchars($sub_row['meta_key'] ?? '');
                                 $image_src = $site . "assets/img/logo.png";
                             }
                     ?>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
-                                <div class="product-box-card shadow-sm">
-                                    <div class="product-box-img">
-                                        <!-- Image seedha exact path se aayegi -->
-                                        <img src="<?= $image_src ?>" alt="<?= $prod_name ?>" loading="lazy" onerror="this.src='<?= $site ?>assets/img/logo.png'">
-                                    </div>
-                                    <h3><?= $prod_name ?></h3>
-                                    <div class="product-short-text-wrap">
-                                        <?php
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="product-box-card shadow-sm">
+                            <div class="product-box-img">
+                                <!-- Image seedha exact path se aayegi -->
+                                <img src="<?= $image_src ?>" alt="<?= $prod_name ?>" loading="lazy"
+                                    onerror="this.src='<?= $site ?>assets/img/logo.png'">
+                            </div>
+                            <h3><?= $prod_name ?></h3>
+                            <div class="product-short-text-wrap">
+                                <?php
                                         $clean_text = strip_tags(html_entity_decode($prod_desc));
                                         echo strlen($clean_text) > 95 ? mb_strimwidth($clean_text, 0, 92, '...') : $clean_text;
                                         ?>
-                                    </div>
-                                    <a href="<?= $site ?>product/<?= $prod_slug ?>" class="product-box-btn">Read more</a>
-                                </div>
                             </div>
+                            <a href="<?= $site ?>product/<?= $prod_slug ?>" class="product-box-btn">Read more</a>
+                        </div>
+                    </div>
                     <?php
                         }
                     } else {
@@ -243,7 +246,7 @@ $meta_key          = htmlspecialchars($sub_row['meta_key'] ?? '');
     <script src="<?= $site ?>assets/js/wow.min.js"></script>
     <script src="<?= $site ?>assets/js/main.js"></script>
     <script>
-        new WOW().init();
+    new WOW().init();
     </script>
 </body>
 

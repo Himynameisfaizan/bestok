@@ -2,34 +2,35 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-include 'inc/header.php'; 
-// Central database connection config pipeline map rules
 include_once('config/connect.php');
 
 if (!isset($site)) {
-$site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/bestok/";
+    $site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/bestok/";
 }
 
-// 1. GET ROUTE SLUG PARAMETER FROM HTACCESS RULE (Fixed variable name)
+// 1. REDIRECT LOGIC SABSE PEHLE
 if (!isset($_GET['slug']) || empty($_GET['slug'])) {
-header("Location: " . $site . "index.php");
-exit();
+    header("Location: " . $site . "404.php");
+    exit();
 }
 
 $category_slug = mysqli_real_escape_string($conn, $_GET['slug']);
 
-// 2. FETCH MASTER PARENT CATEGORY RECORD DATA ROWS
+// 2. CHECK CATEGORY EXISTENCE
 $cat_master_query = "SELECT * FROM `categories` WHERE `slug_url` = '$category_slug' AND `status` = 1 LIMIT 1";
 $cat_master_res = mysqli_query($conn, $cat_master_query);
 
 if (!$cat_master_res || mysqli_num_rows($cat_master_res) == 0) {
-header("Location: " . $site . "index.php");
-exit();
+    header("Location: " . $site . "404.php");
+    exit();
 }
 
+// 3. AB SUB KUCH CONFIRM HONE KE BAAD HEADER.PHP INCLUDE KAREIN
+include 'inc/header.php';
+
 $category_row = mysqli_fetch_assoc($cat_master_res);
-$master_cate_id = $category_row['cate_id']; // Relational key binder field
+$master_cate_id = $category_row['cate_id'];
+// ... (baaki ka sub_categories fetch aur HTML design same rahega)
 $category_title = htmlspecialchars($category_row['categories']);
 $meta_title = htmlspecialchars($category_row['meta_title'] ?? $category_row['categories']);
 $meta_desc = htmlspecialchars($category_row['meta_desc'] ?? '');
@@ -128,7 +129,7 @@ $sub_cats_arr[] = $sub_row;
     color: #1e293b;
     margin-bottom: 10px;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     height: 44px;
@@ -143,7 +144,7 @@ $sub_cats_arr[] = $sub_row;
     height: 63px;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     margin-bottom: 15px;
 }
