@@ -1,39 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
-    <meta name="description" content="Home">
-    <link rel="canonical" href="">
-    <link rel="icon" type="image/x-icon" href="assets/img/fav.png">
-    <!-- css -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/all-fontawesome.min.css">
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
-    <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
-    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="assets/css/nice-select.min.css">
-    <link rel="stylesheet" type="assets/css/flaticon.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-    <meta name="google-site-verification" content="GGGzfztUktF_-gsCYU0Mi8gIcXEhBB6Rc9ECNgl1Crg" />
-
-</head>
+<?php include 'inc/header.php'; ?>
 
 <body class="home-2">
-
-
-    <?php include 'inc/header.php'; ?>
-
 
     <main class="main">
 
@@ -51,10 +18,10 @@
 
 
         <!-- gallery-area -->
-      <div class="gallery-area py-100 mt-5 mb-5">
-    <div class="container">
-        <div class="row g-4 popup-gallery">
-            <?php
+        <div class="gallery-area py-100 mt-5 mb-5">
+            <div class="container">
+                <div class="row g-4 popup-gallery">
+                    <?php
             // Global directory environment path mapping routing pipeline
             if (!isset($site)) {
                 $site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/bestok/";
@@ -75,7 +42,8 @@
                     <div class="col-md-4 col-sm-6 col-12">
                         <div class="gallery-item wow fadeInUp" data-wow-delay=".25s">
                             <div class="gallery-img">
-                                <img src="<?= $gallery_image_src ?>" alt="<?= $img_title ?>" onerror="this.src='<?= $site ?>assets/img/p1.jpg'">
+                                <img src="<?= $gallery_image_src ?>" alt="<?= $img_title ?>"
+                                    onerror="this.src='<?= $site ?>assets/img/p1.jpg'">
                             </div>
                             <div class="gallery-content">
                                 <a class="popup-img gallery-link" href="<?= $gallery_image_src ?>">
@@ -91,9 +59,9 @@
                 echo '<div class="col-12 text-center py-5"><div class="alert alert-info">No solution portfolio or gallery items loaded in database currently.</div></div>';
             }
             ?>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
         <!-- gallery-area end -->
 
 
@@ -125,7 +93,7 @@
     <script src="assets/js/main.js"></script>
 
     <script>
-        new WOW().init();
+    new WOW().init();
     </script>
 </body>
 

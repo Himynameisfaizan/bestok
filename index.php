@@ -1,46 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
-    <meta name="description" content="Home">
-    <link rel="canonical" href="">
-    <link rel="icon" type="image/x-icon" href="admin/uploads/logo/logo_header_6a2f926029dbb.webp">
-    <!-- css -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/all-fontawesome.min.css">
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
-    <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
-    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="assets/css/nice-select.min.css">
-    <link rel="stylesheet" type="assets/css/flaticon.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-    <meta name="google-site-verification" content="GGGzfztUktF_-gsCYU0Mi8gIcXEhBB6Rc9ECNgl1Crg" />
-
-</head>
+<?php include 'inc/header.php'; ?>
 
 <body class="home-2">
-
-
-    <?php include 'inc/header.php'; ?>
-
 
     <main class="main">
 
         <!-- hero area -->
         <div class="hero-section">
-    <div class="hero-slider owl-carousel">
-        <?php
+            <div class="hero-slider owl-carousel">
+                <?php
         // Global directory environment path checking pipeline
         if (!isset($site)) {
             $site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/bestok/";
@@ -60,86 +27,96 @@
                 $banner_image_src = (!empty($b_path) && file_exists("admin/".$b_path)) ? $site."admin/".$b_path : $site."assets/img/banner3.jpg";
                 ?>
                 <div class="hero-single">
-                    <img class="img-3" src="<?= $banner_image_src ?>" alt="<?= $b_title ?>" onerror="this.src='<?= $site ?>assets/img/banner3.jpg'">
+                    <img class="img-3" src="<?= $banner_image_src ?>" alt="<?= $b_title ?>"
+                        onerror="this.src='<?= $site ?>assets/img/banner3.jpg'">
                 </div>
                 <?php
             }
         } else {
             // Secure static fallback frames if table rows are empty in system repository
             ?>
-            <div class="hero-single"><img class="img-3" src="<?= $site ?>assets/img/banner3.jpg" alt="Default Banner 1"></div>
-            <div class="hero-single"><img class="img-3" src="<?= $site ?>assets/img/banner4.jpg" alt="Default Banner 2"></div>
-            <div class="hero-single"><img class="img-3" src="<?= $site ?>assets/img/banner5.jpg" alt="Default Banner 3"></div>
-            <?php
+                <div class="hero-single"><img class="img-3" src="<?= $site ?>assets/img/banner3.jpg"
+                        alt="Default Banner 1"></div>
+                <div class="hero-single"><img class="img-3" src="<?= $site ?>assets/img/banner4.jpg"
+                        alt="Default Banner 2"></div>
+                <div class="hero-single"><img class="img-3" src="<?= $site ?>assets/img/banner5.jpg"
+                        alt="Default Banner 3"></div>
+                <?php
         }
         ?>
-    </div>
-</div>
+            </div>
+        </div>
 
-            <!-- hero area end -->
+        <!-- hero area end -->
 
-            <!-- Feautes Section -->
-            <section class="features-section">
-                <div class="container">
-                    <div class="outer-box">
-                        <div class="row">
+        <!-- Feautes Section -->
+        <section class="features-section">
+            <div class="container">
+                <div class="outer-box">
+                    <div class="row">
 
-                            <!-- Feature Block -->
-                            <div class="feature-block-two col-lg-4 col-md-4 col-sm-12 wow fadeInUp">
-                                <div class="inner-box">
-                                    <div class="upper-box">
-                                        <div class="icon-box"> <img src="assets/img/crane.png" alt="Crane Icon"></div>
+                        <!-- Feature Block -->
+                        <div class="feature-block-two col-lg-4 col-md-4 col-sm-12 wow fadeInUp">
+                            <div class="inner-box">
+                                <div class="upper-box">
+                                    <div class="icon-box"> <img src="assets/img/crane.png" alt="Crane Icon"></div>
+                                </div>
+                                <div class="lower-content">
+                                    <h4><a href="#">Our Workforce</a></h4>
+                                    <div class="text">Our highly skilled and versatile workforce has been crucial to our
+                                        continuous success. Our complete workforce is made up of a diverse range of
+                                        professionals who all work persistently and collaboratively to help achieve our
+                                        organizational goals.
                                     </div>
-                                    <div class="lower-content">
-                                        <h4><a href="#">Our Workforce</a></h4>
-                                        <div class="text">Our highly skilled and versatile workforce has been crucial to our continuous success. Our complete workforce is made up of a diverse range of professionals who all work persistently and collaboratively to help achieve our organizational goals.
-                                        </div>
-                                        <div class="link-box"><a href="#">Read More</a></div>
-                                    </div>
+                                    <div class="link-box"><a href="#">Read More</a></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Feature Block -->
-                            <div class="feature-block-two col-lg-4 col-md-4 col-sm-12 wow fadeInUp" data-wow-delay="400ms">
-                                <div class="inner-box">
-                                    <div class="upper-box">
-                                        <div class="icon-box"> <img src="assets/img/worker.png" alt="Crane Icon"></div>
-                                    </div>
-                                    <div class="lower-content">
-                                        <h4><a href="#">Customer Satisfaction</a></h4>
-                                        <div class="text">In our company, we always place an immense emphasis on customer
-                                            satisfaction and go the extra mile to achieve it. Before presenting the best
-                                            solutions, we first thoroughly recognize the specific requirements of the
-                                            customers.</div>
-                                        <div class="link-box"><a href="#">Read More</a></div>
-                                    </div>
+                        <!-- Feature Block -->
+                        <div class="feature-block-two col-lg-4 col-md-4 col-sm-12 wow fadeInUp" data-wow-delay="400ms">
+                            <div class="inner-box">
+                                <div class="upper-box">
+                                    <div class="icon-box"> <img src="assets/img/worker.png" alt="Crane Icon"></div>
+                                </div>
+                                <div class="lower-content">
+                                    <h4><a href="#">Customer Satisfaction</a></h4>
+                                    <div class="text">In our company, we always place an immense emphasis on customer
+                                        satisfaction and go the extra mile to achieve it. Before presenting the best
+                                        solutions, we first thoroughly recognize the specific requirements of the
+                                        customers.</div>
+                                    <div class="link-box"><a href="#">Read More</a></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Feature Block -->
-                            <div class="feature-block-two col-lg-4 col-md-4 col-sm-12 wow fadeInUp" data-wow-delay="800ms">
-                                <div class="inner-box">
-                                    <div class="upper-box">
-                                        <div class="icon-box"><img src="assets/img/robot-arm.png" alt="Crane Icon"></div>
-                                    </div>
-                                    <div class="lower-content">
-                                        <h4><a href="#">Smart Technology</a></h4>
-                                        <div class="text">Innovative solutions leveraging cutting-edge smart technology to deliver highly efficient, intelligent, and sustainable operations across industries, ensuring optimal performance, enhanced productivity, and long-term reliability for modern businesses.</div>
-                                        <div class="link-box"><a href="#">Read More</a></div>
-                                    </div>
+                        <!-- Feature Block -->
+                        <div class="feature-block-two col-lg-4 col-md-4 col-sm-12 wow fadeInUp" data-wow-delay="800ms">
+                            <div class="inner-box">
+                                <div class="upper-box">
+                                    <div class="icon-box"><img src="assets/img/robot-arm.png" alt="Crane Icon"></div>
+                                </div>
+                                <div class="lower-content">
+                                    <h4><a href="#">Smart Technology</a></h4>
+                                    <div class="text">Innovative solutions leveraging cutting-edge smart technology to
+                                        deliver highly efficient, intelligent, and sustainable operations across
+                                        industries, ensuring optimal performance, enhanced productivity, and long-term
+                                        reliability for modern businesses.</div>
+                                    <div class="link-box"><a href="#">Read More</a></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            <!--End Feautes Section -->
+            </div>
+        </section>
+        <!--End Feautes Section -->
 
-            <!-- about area -->
-           <div class="about-area pb-70">
-    <div class="container">
-        <div class="row align-items-center">
-            <?php
+        <!-- about area -->
+        <div class="about-area pb-70">
+            <div class="container">
+                <div class="row align-items-center">
+                    <?php
             // Ensure global environmental site pipeline is initiated
             if (!isset($site)) {
                 $site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/bestok/";
@@ -162,71 +139,76 @@
                 // Image absolute folder structural verification pathway check
                 $about_image_src = (!empty($db_img) && file_exists("admin/".$db_img)) ? $site."admin/".$db_img : $site."assets/img/about-img.jpg";
                 ?>
-                
-                <div class="col-lg-6">
-                    <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
-                        <div class="about-img">
-                            <img class="img-3" src="<?= $about_image_src ?>" alt="<?= $db_title ?>" onerror="this.src='<?= $site ?>assets/img/about-img.jpg'">
+
+                    <div class="col-lg-6">
+                        <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
+                            <div class="about-img">
+                                <img class="img-3" src="<?= $about_image_src ?>" alt="<?= $db_title ?>"
+                                    onerror="this.src='<?= $site ?>assets/img/about-img.jpg'">
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="about-right wow fadeInUp" data-wow-delay=".25s">
-                        <div class="site-heading mb-2">
-                            <span class="site-title-tagline">About Us</span>
+
+                    <div class="col-lg-6">
+                        <div class="about-right wow fadeInUp" data-wow-delay=".25s">
+                            <div class="site-heading mb-2">
+                                <span class="site-title-tagline">About Us</span>
+                            </div>
+                            <h2 class="dffg"><?= $db_title ?></h2>
+
+                            <p class="mb-3">
+                                <?= nl2br(htmlspecialchars($clean_content)) ?>
+                            </p>
+
+                            <a href="<?= $site ?>about.php" class="theme-btn">Know More<i
+                                    class="fas fa-arrow-right"></i></a>
                         </div>
-                        <h2 class="dffg"><?= $db_title ?></h2>
-
-                        <p class="mb-3">
-                            <?= nl2br(htmlspecialchars($clean_content)) ?>
-                        </p>
-
-                        <a href="<?= $site ?>about.php" class="theme-btn">Know More<i class="fas fa-arrow-right"></i></a>
                     </div>
-                </div>
 
-            <?php 
+                    <?php 
             } else {
                 // Hardcoded secure layout fallback if dataset is unexpectedly cleared on live production
             ?>
-                <div class="col-lg-6">
-                    <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
-                        <div class="about-img">
-                            <img class="img-3" src="<?= $site ?>assets/img/about-img.jpg" alt="About Bestok">
+                    <div class="col-lg-6">
+                        <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
+                            <div class="about-img">
+                                <img class="img-3" src="<?= $site ?>assets/img/about-img.jpg" alt="About Bestok">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="about-right wow fadeInUp" data-wow-delay=".25s">
-                        <div class="site-heading mb-2">
-                            <span class="site-title-tagline">About Us</span>
+                    <div class="col-lg-6">
+                        <div class="about-right wow fadeInUp" data-wow-delay=".25s">
+                            <div class="site-heading mb-2">
+                                <span class="site-title-tagline">About Us</span>
+                            </div>
+                            <h2 class="dffg">Welcome to BESTOK INDUSTRIES PVT LTD</h2>
+                            <p class="mb-3">At Bestok Industries Private Limited, we have consistently upheld the
+                                highest standards of quality in both the products we manufacture and the manner in which
+                                we interact with our clients.</p>
+                            <a href="<?= $site ?>about.php" class="theme-btn">Know More<i
+                                    class="fas fa-arrow-right"></i></a>
                         </div>
-                        <h2 class="dffg">Welcome to BESTOK INDUSTRIES PVT LTD</h2>
-                        <p class="mb-3">At Bestok Industries Private Limited, we have consistently upheld the highest standards of quality in both the products we manufacture and the manner in which we interact with our clients.</p>
-                        <a href="<?= $site ?>about.php" class="theme-btn">Know More<i class="fas fa-arrow-right"></i></a>
                     </div>
+                    <?php } ?>
                 </div>
-            <?php } ?>
+            </div>
         </div>
-    </div>
-</div>
-            <!-- about area end -->
+        <!-- about area end -->
 
-            <!-- our products -->
-           <div id="rs-blog" class="rs-blog gray-color pt-60 pb-80 md-pt-70 md-pb-80">
-    <div class="container">
-        <div class="sec-title2 text-center mb-45">
-            <h2 class="title title2">
-                Products and Solutions
-            </h2>
-            <p>Discover powerful and reliable products crafted to deliver smart, efficient, and effective
-                solutions for your business needs.</p>
-            <div class="heading-divider"></div>
-        </div>
-        
-        <div class="row">
-            <?php
+        <!-- our products -->
+        <div id="rs-blog" class="rs-blog gray-color pt-60 pb-80 md-pt-70 md-pb-80">
+            <div class="container">
+                <div class="sec-title2 text-center mb-45">
+                    <h2 class="title title2">
+                        Products and Solutions
+                    </h2>
+                    <p>Discover powerful and reliable products crafted to deliver smart, efficient, and effective
+                        solutions for your business needs.</p>
+                    <div class="heading-divider"></div>
+                </div>
+
+                <div class="row">
+                    <?php
             // 🎯 FETCH ACTIVE GLOBAL PRODUCTS LIMITING TO 8 ITEMS FOR HOMEPAGE GRID DISPLAY
            $homepage_prod_query = "SELECT
                             p.*,
@@ -256,7 +238,8 @@
                     <div class="col-sm-3 col-md-3 col-12 mb-4">
                         <div class="product-box-card">
                             <div class="product-box-img">
-                                <img src="<?= $image_src ?>" alt="<?= $prod_name ?>" onerror="this.src='<?= $site ?>assets/img/p1.jpg'">
+                                <img src="<?= $image_src ?>" alt="<?= $prod_name ?>"
+                                    onerror="this.src='<?= $site ?>assets/img/p1.jpg'">
                             </div>
                             <h3><?= $prod_name ?></h3>
                             <div class="product-short-text-wrap mb-2">
@@ -275,126 +258,135 @@
                 echo '<div class="col-12 text-center py-4"><div class="alert alert-warning">No solutions or products logged in repository grid matrix currently.</div></div>';
             }
             ?>
-        </div>
-    </div>
-</div>
-            <!-- /our products -->
-
-
-            <!-- counter area -->
-            <div class="counter-area pt-40 pb-40">
-                <div class="container">
-                    <div class="row g-4 justify-content-center">
-                        <div class="col-md-12">
-                            <div class="content-box">
-                                <h2>Provide You The Highest Quality Work <br>That Meets Your Expectation.</h2>
-                                <div class="link-box"><a href="tel:9871126707" class="theme-btn btn-style-one">Call Now:
-                                        +91-9871126707</a></div>
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
             </div>
-            <!-- counter area end -->
+        </div>
+        <!-- /our products -->
 
 
-            <!-- Achivements Section Start -->
-            <section class="achivements-section fix section-bg-2 section-padding bg-cover"
-                style="background-image: url('assets/img/achivements-bg-shape.png');">
-                <div class="container">
-                    <div class="achivements-wrapper">
-                        <div class="row g-4 justify-content-between">
-                            <div class="col-xxl-6 col-xl-7 col-lg-8">
-                                <div class="achivements-content">
-                                    <div class="section-title">
-                                        <h6 class="wow fadeInUp">Why Choose
-                                            Us</h6>
-                                        <h2 class="splt-txt wow" data-splitting>Your Trusted Partner in Compressed Air Solutions
+        <!-- counter area -->
+        <div class="counter-area pt-40 pb-40">
+            <div class="container">
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-12">
+                        <div class="content-box">
+                            <h2>Provide You The Highest Quality Work <br>That Meets Your Expectation.</h2>
+                            <div class="link-box"><a href="tel:9871126707" class="theme-btn btn-style-one">Call Now:
+                                    +91-9871126707</a></div>
+                        </div>
+                    </div>
 
-                                        </h2>
+                </div>
+            </div>
+        </div>
+        <!-- counter area end -->
+
+
+        <!-- Achivements Section Start -->
+        <section class="achivements-section fix section-bg-2 section-padding bg-cover"
+            style="background-image: url('assets/img/achivements-bg-shape.png');">
+            <div class="container">
+                <div class="achivements-wrapper">
+                    <div class="row g-4 justify-content-between">
+                        <div class="col-xxl-6 col-xl-7 col-lg-8">
+                            <div class="achivements-content">
+                                <div class="section-title">
+                                    <h6 class="wow fadeInUp">Why Choose
+                                        Us</h6>
+                                    <h2 class="splt-txt wow" data-splitting>Your Trusted Partner in Compressed Air
+                                        Solutions
+
+                                    </h2>
+                                </div>
+                                <p class="mt-3 mt-md-0 wow fadeInUp">
+                                    At Bestok Industries Private Limited, we are committed to delivering high-quality
+                                    compressed air equipment that meets the exacting standards of modern industries.
+                                    From rotary screw compressors to air dryers, every product is manufactured with
+                                    precision to ensure reliability, efficiency, and long-lasting performance for our
+                                    valued clients.
+                                </p>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".2s">
+                                        <div class="counter-items">
+                                            <div class="content">
+                                                <div class="icon">
+                                                    <img src="assets/img/11.svg" alt="img">
+                                                </div>
+                                                <h2><span class="counter" data-count="+" data-to="45"
+                                                        data-speed="3000">45</span>k+</h2>
+                                                <p>project Complete</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p class="mt-3 mt-md-0 wow fadeInUp">
-                                        At Bestok Industries Private Limited, we are committed to delivering high-quality compressed air equipment that meets the exacting standards of modern industries. From rotary screw compressors to air dryers, every product is manufactured with precision to ensure reliability, efficiency, and long-lasting performance for our valued clients.
-                                    </p>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".2s">
-                                            <div class="counter-items">
-                                                <div class="content">
-                                                    <div class="icon">
-                                                        <img src="assets/img/11.svg" alt="img">
-                                                    </div>
-                                                    <h2><span class="counter" data-count="+" data-to="45" data-speed="3000">45</span>k+</h2>
-                                                    <p>project Complete</p>
+                                    <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".4s">
+                                        <div class="counter-items">
+                                            <div class="content">
+                                                <div class="icon">
+                                                    <img src="assets/img/12.svg" alt="img">
                                                 </div>
+                                                <h2><span class="counter" data-count="+" data-to="25"
+                                                        data-speed="3000">25</span>k+</h2>
+                                                <p>Active On Clients</p>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".4s">
-                                            <div class="counter-items">
-                                                <div class="content">
-                                                    <div class="icon">
-                                                        <img src="assets/img/12.svg" alt="img">
-                                                    </div>
-                                                    <h2><span class="counter" data-count="+" data-to="25" data-speed="3000">25</span>k+</h2>
-                                                    <p>Active On Clients</p>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".2s">
+                                        <div class="counter-items">
+                                            <div class="content">
+                                                <div class="icon">
+                                                    <img src="assets/img/13.svg" alt="img">
                                                 </div>
+                                                <h2><span class="counter" data-count="+" data-to="50"
+                                                        data-speed="3000">50</span>+</h2>
+                                                <p>Experience Team</p>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".2s">
-                                            <div class="counter-items">
-                                                <div class="content">
-                                                    <div class="icon">
-                                                        <img src="assets/img/13.svg" alt="img">
-                                                    </div>
-                                                    <h2><span class="counter" data-count="+" data-to="50" data-speed="3000">50</span>+</h2>
-                                                    <p>Experience Team</p>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".4s">
+                                        <div class="counter-items">
+                                            <div class="content">
+                                                <div class="icon">
+                                                    <img src="assets/img/14.svg" alt="img">
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".4s">
-                                            <div class="counter-items">
-                                                <div class="content">
-                                                    <div class="icon">
-                                                        <img src="assets/img/14.svg" alt="img">
-                                                    </div>
-                                                    <h2><span class="counter" data-count="+" data-to="15" data-speed="3000">15</span>k+</h2>
-                                                    <p>Winning Awards</p>
-                                                </div>
+                                                <h2><span class="counter" data-count="+" data-to="15"
+                                                        data-speed="3000">15</span>k+</h2>
+                                                <p>Winning Awards</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xxl-4 col-xl-5 col-lg-6 wow fadeInUp" data-wow-delay=".2s">
-                                <div class="achivements-image">
-                                    <img src="assets/img/whyimg1.jpg" alt="img">
-                                    <div class="achivements-image-2 float-bob-y">
-                                        <img src="assets/img/whyimg2.jpg" alt="img">
-                                    </div>
+                        </div>
+                        <div class="col-xxl-4 col-xl-5 col-lg-6 wow fadeInUp" data-wow-delay=".2s">
+                            <div class="achivements-image">
+                                <img src="assets/img/whyimg1.jpg" alt="img">
+                                <div class="achivements-image-2 float-bob-y">
+                                    <img src="assets/img/whyimg2.jpg" alt="img">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-
-
-
-            <!-- gallery-area -->
-            <div class="gallery-area py-100">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 mx-auto">
-                <div class="site-heading text-center wow fadeInDown" data-wow-delay=".25s">
-                    <span class="site-title-tagline">Our Gallery</span>
-                    <h2 class="site-title">Let's Check Our <span>Gallery</span></h2>
-                    <div class="heading-divider"></div>
-                </div>
             </div>
-        </div>
-        
-        <div class="row g-4 popup-gallery">
-            <?php
+        </section>
+
+
+
+        <!-- gallery-area -->
+        <div class="gallery-area py-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 mx-auto">
+                        <div class="site-heading text-center wow fadeInDown" data-wow-delay=".25s">
+                            <span class="site-title-tagline">Our Gallery</span>
+                            <h2 class="site-title">Let's Check Our <span>Gallery</span></h2>
+                            <div class="heading-divider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 popup-gallery">
+                    <?php
             // Ensure global database context path variable exists
             if (!isset($site)) {
                 $site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/bestok/";
@@ -415,7 +407,8 @@
                     <div class="col-md-4 col-sm-6 col-12">
                         <div class="gallery-item wow fadeInUp" data-wow-delay=".25s">
                             <div class="gallery-img">
-                                <img src="<?= $live_image_target ?>" alt="<?= $image_identifier ?>" onerror="this.src='<?= $site ?>assets/img/p1.jpg'">
+                                <img src="<?= $live_image_target ?>" alt="<?= $image_identifier ?>"
+                                    onerror="this.src='<?= $site ?>assets/img/p1.jpg'">
                             </div>
                             <div class="gallery-content">
                                 <a class="popup-img gallery-link" href="<?= $live_image_target ?>">
@@ -430,29 +423,30 @@
                 echo '<div class="col-12 text-center py-5"><div class="alert alert-info">No structural asset items configured in portfolio collection block currently.</div></div>';
             }
             ?>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-            <!-- gallery-area end -->
+        <!-- gallery-area end -->
 
 
 
-            <!-- testimonial-area -->
-          <div class="testimonial-area ts-bg pt-80 pb-60">
-    <div class="container">
+        <!-- testimonial-area -->
+        <div class="testimonial-area ts-bg pt-80 pb-60">
+            <div class="container">
 
-        <div class="sec-title2 ftyr text-center mb-45">
-            <h2 class="title title2">
-                What Our Client Say
-            </h2>
-            <p>"Every testing solution we received exceeded our expectations in terms of accuracy, consistency, and dependability."</p>
-            <div class="heading-divider"></div>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="testimonial-slider owl-carousel owl-theme wow fadeInUp" data-wow-delay=".25s">
-                    <?php
+                <div class="sec-title2 ftyr text-center mb-45">
+                    <h2 class="title title2">
+                        What Our Client Say
+                    </h2>
+                    <p>"Every testing solution we received exceeded our expectations in terms of accuracy, consistency,
+                        and dependability."</p>
+                    <div class="heading-divider"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="testimonial-slider owl-carousel owl-theme wow fadeInUp" data-wow-delay=".25s">
+                            <?php
                     // Environmental site variables fallback loop protection
                     if (!isset($site)) {
                         $site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/bestok/";
@@ -485,7 +479,7 @@
                                     <!--    <div class="client-info">-->
                                     <!--        <img src="<?= $avatar_src ?>" alt="<?= $client_name ?>" onerror="this.src='<?= $site ?>assets/img/2.webp'">-->
                                     <!--        <div class="content">-->
-                                                <!--<h4><?= $client_name ?></h4>-->
+                                    <!--<h4><?= $client_name ?></h4>-->
                                     <!--            <span><?= $client_desg ?></span>-->
                                     <!--            <div class="star">-->
                                     <!--                <i class="fa-solid fa-star"></i>-->
@@ -504,39 +498,39 @@
                     } else {
                         // Empty repository fallback structure loop
                         ?>
-                        <!--<div class="testimonial-item">-->
-                        <!--    <div class="testimonial-card-items">-->
-                        <!--        <div class="shape-img"><img src="<?= $site ?>assets/img/shape-left.png" alt="img"></div>-->
-                        <!--        <p>"Bestok Industries provides top-quality compressed air equipment that we can always rely on. Their products are efficient, precise, and long-lasting."</p>-->
-                        <!--        <div class="client-info-items">-->
-                        <!--            <div class="client-info">-->
-                        <!--                <img src="<?= $site ?>assets/img/2.webp" alt="Default User">-->
-                        <!--                <div class="content">-->
-                        <!--                    <h4>Rahul Mishra</h4>-->
-                        <!--                    <span>Founder & CEO</span>-->
-                        <!--                    <div class="star">-->
-                        <!--                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>-->
-                        <!--                    </div>-->
-                        <!--                </div>-->
-                        <!--            </div>-->
-                        <!--        </div>-->
-                        <!--    </div>-->
-                        <!--</div>-->
-                    <?php } ?>
+                            <!--<div class="testimonial-item">-->
+                            <!--    <div class="testimonial-card-items">-->
+                            <!--        <div class="shape-img"><img src="<?= $site ?>assets/img/shape-left.png" alt="img"></div>-->
+                            <!--        <p>"Bestok Industries provides top-quality compressed air equipment that we can always rely on. Their products are efficient, precise, and long-lasting."</p>-->
+                            <!--        <div class="client-info-items">-->
+                            <!--            <div class="client-info">-->
+                            <!--                <img src="<?= $site ?>assets/img/2.webp" alt="Default User">-->
+                            <!--                <div class="content">-->
+                            <!--                    <h4>Rahul Mishra</h4>-->
+                            <!--                    <span>Founder & CEO</span>-->
+                            <!--                    <div class="star">-->
+                            <!--                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>-->
+                            <!--                    </div>-->
+                            <!--                </div>-->
+                            <!--            </div>-->
+                            <!--        </div>-->
+                            <!--    </div>-->
+                            <!--</div>-->
+                            <?php } ?>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
-        
-    </div>
-</div>
-            <!-- testimonial-area end -->
+        <!-- testimonial-area end -->
 
 
-           <div class="partner-area mt-40 mb-40">
-    <div class="container">
-        <div class="partner-wrapper partner-slider owl-carousel owl-theme">
+        <div class="partner-area mt-40 mb-40">
+            <div class="container">
+                <div class="partner-wrapper partner-slider owl-carousel owl-theme">
 
-            <?php
+                    <?php
             $video_query = mysqli_query($conn,"SELECT * FROM videos WHERE status='1' ORDER BY video_id DESC");
 
             if(mysqli_num_rows($video_query)>0){
@@ -544,29 +538,25 @@
                 while($video=mysqli_fetch_assoc($video_query)){
             ?>
 
-                <div class="item">
-                    <iframe
-                        width="100%"
-                        height="220"
-                        src="https://www.youtube.com/embed/<?php echo $video['video_code']; ?>?autoplay=1&mute=1&loop=1&playlist=<?php echo $video['video_code']; ?>"
-                        title="<?php echo htmlspecialchars($video['title']); ?>"
-                        frameborder="0"
-                        allow="autoplay; encrypted-media"
-                        allowfullscreen>
-                    </iframe>
-                </div>
+                    <div class="item">
+                        <iframe width="100%" height="220"
+                            src="https://www.youtube.com/embed/<?php echo $video['video_code']; ?>?autoplay=1&mute=1&loop=1&playlist=<?php echo $video['video_code']; ?>"
+                            title="<?php echo htmlspecialchars($video['title']); ?>" frameborder="0"
+                            allow="autoplay; encrypted-media" allowfullscreen>
+                        </iframe>
+                    </div>
 
-            <?php
+                    <?php
                 }
             }
             ?>
 
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
 
-            <!-- partner area end -->
+        <!-- partner area end -->
     </main>
 
 
@@ -591,7 +581,7 @@
     <script src="assets/js/main.js"></script>
 
     <script>
-        new WOW().init();
+    new WOW().init();
     </script>
 </body>
 

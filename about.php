@@ -1,39 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
-    <meta name="description" content="Home">
-    <link rel="canonical" href="">
-    <link rel="icon" type="image/x-icon" href="assets/img/fav.png">
-    <!-- css -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/all-fontawesome.min.css">
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
-    <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
-    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="assets/css/nice-select.min.css">
-    <link rel="stylesheet" type="assets/css/flaticon.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-    <meta name="google-site-verification" content="GGGzfztUktF_-gsCYU0Mi8gIcXEhBB6Rc9ECNgl1Crg" />
-
-</head>
+<?php include 'inc/header.php'; ?>
 
 <body class="home-2">
-
-
-    <?php include 'inc/header.php'; ?>
-
 
     <main class="main">
 
@@ -50,10 +17,10 @@
         <!-- breadcrumb end -->
 
         <!-- about area -->
-      <div class="about-area pb-70">
-    <div class="container">
-        <div class="row align-items-center">
-            <?php
+        <div class="about-area pb-70">
+            <div class="container">
+                <div class="row align-items-center">
+                    <?php
             // Global environmental site pipeline setup
             if (!isset($site)) {
                 $site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/bestok/";
@@ -72,55 +39,57 @@
                 // Image absolute administrative check logic path mapping
                 $about_image_src = (!empty($db_img) && file_exists("admin/".$db_img)) ? $site."admin/".$db_img : $site."assets/img/about-img.jpg";
                 ?>
-                
-                <div class="col-lg-6">
-                    <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
-                        <div class="about-img">
-                            <img class="img-3" src="<?= $about_image_src ?>" alt="<?= $db_title ?>" onerror="this.src='<?= $site ?>assets/img/about-img.jpg'">
+
+                    <div class="col-lg-6">
+                        <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
+                            <div class="about-img">
+                                <img class="img-3" src="<?= $about_image_src ?>" alt="<?= $db_title ?>"
+                                    onerror="this.src='<?= $site ?>assets/img/about-img.jpg'">
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="about-right wow fadeInUp" data-wow-delay=".25s">
-                        <div class="site-heading mb-2">
-                            <span class="site-title-tagline">About Us</span>
-                        </div>
-                        <h2 class="dffg"><?= $db_title ?></h2>
 
-                        <div class="mb-3 product-dynamic-brief">
-                            <?= $db_content ?>
-                        </div>
+                    <div class="col-lg-6">
+                        <div class="about-right wow fadeInUp" data-wow-delay=".25s">
+                            <div class="site-heading mb-2">
+                                <span class="site-title-tagline">About Us</span>
+                            </div>
+                            <h2 class="dffg"><?= $db_title ?></h2>
 
-                        <!--<a href="<?= $site ?>about.php" class="theme-btn">Know More<i class="fas fa-arrow-right"></i></a>-->
+                            <div class="mb-3 product-dynamic-brief">
+                                <?= $db_content ?>
+                            </div>
+
+                            <!--<a href="<?= $site ?>about.php" class="theme-btn">Know More<i class="fas fa-arrow-right"></i></a>-->
+                        </div>
                     </div>
-                </div>
 
-            <?php 
+                    <?php 
             } else {
                 // Secure layout fallback loop if dataset returns empty on production
             ?>
-                <div class="col-lg-6">
-                    <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
-                        <div class="about-img">
-                            <img class="img-3" src="<?= $site ?>assets/img/about-img.jpg" alt="About Bestok">
+                    <div class="col-lg-6">
+                        <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
+                            <div class="about-img">
+                                <img class="img-3" src="<?= $site ?>assets/img/about-img.jpg" alt="About Bestok">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="about-right wow fadeInUp" data-wow-delay=".25s">
-                        <div class="site-heading mb-2">
-                            <span class="site-title-tagline">About Us</span>
+                    <div class="col-lg-6">
+                        <div class="about-right wow fadeInUp" data-wow-delay=".25s">
+                            <div class="site-heading mb-2">
+                                <span class="site-title-tagline">About Us</span>
+                            </div>
+                            <h2 class="dffg">Welcome to BESTOK INDUSTRIES PVT LTD</h2>
+                            <p class="mb-3">We have consistently upheld the highest standards of quality in both the
+                                products we manufacture and the manner in which we interact with our clients.</p>
+                            <!--<a href="<?= $site ?>about.php" class="theme-btn">Know More<i class="fas fa-arrow-right"></i></a>-->
                         </div>
-                        <h2 class="dffg">Welcome to BESTOK INDUSTRIES PVT LTD</h2>
-                        <p class="mb-3">We have consistently upheld the highest standards of quality in both the products we manufacture and the manner in which we interact with our clients.</p>
-                        <!--<a href="<?= $site ?>about.php" class="theme-btn">Know More<i class="fas fa-arrow-right"></i></a>-->
                     </div>
+                    <?php } ?>
                 </div>
-            <?php } ?>
+            </div>
         </div>
-    </div>
-</div>
         <!-- about area end -->
 
 
@@ -156,7 +125,10 @@
                                 </div>
                                 <div class="lower-content">
                                     <h4><a href="#">Our Workforce</a></h4>
-                                    <div class="text">Our highly skilled and versatile workforce has been crucial to our continuous success. Our complete workforce is made up of a diverse range of professionals who all work persistently and collaboratively to help achieve our organizational goals.
+                                    <div class="text">Our highly skilled and versatile workforce has been crucial to our
+                                        continuous success. Our complete workforce is made up of a diverse range of
+                                        professionals who all work persistently and collaboratively to help achieve our
+                                        organizational goals.
                                     </div>
                                     <div class="link-box"><a href="#">Read More</a></div>
                                 </div>
@@ -188,7 +160,10 @@
                                 </div>
                                 <div class="lower-content">
                                     <h4><a href="#">Smart Technology</a></h4>
-                                    <div class="text">Innovative solutions leveraging cutting-edge smart technology to deliver highly efficient, intelligent, and sustainable operations across industries, ensuring optimal performance, enhanced productivity, and long-term reliability for modern businesses.</div>
+                                    <div class="text">Innovative solutions leveraging cutting-edge smart technology to
+                                        deliver highly efficient, intelligent, and sustainable operations across
+                                        industries, ensuring optimal performance, enhanced productivity, and long-term
+                                        reliability for modern businesses.</div>
                                     <div class="link-box"><a href="#">Read More</a></div>
                                 </div>
                             </div>
@@ -201,10 +176,10 @@
 
 
         <!-- partner area -->
-     
-<div class="partner-area mt-40 mb-40">
-    <div class="container">
-        <?php
+
+        <div class="partner-area mt-40 mb-40">
+            <div class="container">
+                <?php
         // Ensure global base directory path is initiated
         if (!isset($site)) {
             $site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . "/bestok/";
@@ -224,8 +199,8 @@
             : "d-flex flex-wrap justify-content-center align-items-center gap-5 py-3";
         ?>
 
-        <div class="<?= $wrapper_class ?>">
-            <?php
+                <div class="<?= $wrapper_class ?>">
+                    <?php
             if ($total_brands > 0) {
                 while ($b_row = mysqli_fetch_assoc($carousel_brand_res)) {
                     $b_title     = htmlspecialchars($b_row['brand_name']);
@@ -241,8 +216,8 @@
                     ?>
                     <div class="partner-item text-center px-3">
                         <img src="<?= $live_logo_src ?>" alt="<?= $b_title ?>" class="logoclint img-fluid"
-                             style="max-height: 150px; width: auto; object-fit: contain; display: inline-block;"
-                             onerror="this.src='<?= $site ?>assets/img/logo.png'">
+                            style="max-height: 150px; width: auto; object-fit: contain; display: inline-block;"
+                            onerror="this.src='<?= $site ?>assets/img/logo.png'">
                     </div>
                     <?php
                 }
@@ -250,10 +225,10 @@
                 echo '<div class="text-center text-muted py-3 w-100">No client logos added yet.</div>';
             }
             ?>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
- 
+
         <!-- partner area end -->
 
 
@@ -281,7 +256,7 @@
     <script src="assets/js/main.js"></script>
 
     <script>
-        new WOW().init();
+    new WOW().init();
     </script>
 </body>
 

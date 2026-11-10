@@ -1,39 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
-    <meta name="description" content="Home">
-    <link rel="canonical" href="">
-    <link rel="icon" type="image/x-icon" href="assets/img/fav.png">
-    <!-- css -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/all-fontawesome.min.css">
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
-    <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
-    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="assets/css/nice-select.min.css">
-    <link rel="stylesheet" type="assets/css/flaticon.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-    <meta name="google-site-verification" content="GGGzfztUktF_-gsCYU0Mi8gIcXEhBB6Rc9ECNgl1Crg" />
-
-</head>
+<?php include 'inc/header.php'; ?>
 
 <body class="home-2">
-
-
-    <?php include 'inc/header.php'; ?>
-
 
     <main class="main">
 
@@ -57,14 +24,15 @@
 
                         <h2 class="site-title">Feel Free to <span>Contact us</span></h2>
                         <p>
-                        <p>If you have any questions about what we offer for consumers or for business, you can always email us or call us via the below details. We&rsquo;ll reply within 24 hours.</p>
+                        <p>If you have any questions about what we offer for consumers or for business, you can always
+                            email us or call us via the below details. We&rsquo;ll reply within 24 hours.</p>
                         </p>
                     </div>
                     <div class="row">
                         <div class="col-md-8">
 
-                           <div class="row mt-2 contact-textpage">
-    <?php
+                            <div class="row mt-2 contact-textpage">
+                                <?php
     // 1. FETCH THE BASE CONFIGURATION INDEX MATRIX FROM CONTACTS TABLE
     $page_contact_query = "SELECT * FROM `contacts` LIMIT 1";
     $page_contact_res   = mysqli_query($conn, $page_contact_query);
@@ -82,66 +50,69 @@
     $p_email3   = !empty($p_data['email3']) ? htmlspecialchars($p_data['email3']) : '';
     ?>
 
-    <div class="col-md-12">
-        <div class="contact-info">
-            <div class="icon">
-                <i class="fa fa-location-arrow" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <h5>Visit our office</h5>
-                <p><?= $p_address ?></p>
-            </div>
-        </div>
-    </div>
+                                <div class="col-md-12">
+                                    <div class="contact-info">
+                                        <div class="icon">
+                                            <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="content">
+                                            <h5>Visit our office</h5>
+                                            <p><?= $p_address ?></p>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="col-md-12">
-        <div class="contact-info">
-            <div class="icon">
-                <i class="fa fa-phone" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <h5>Call Us</h5>
-                <p>
-                    <a href="tel:<?= preg_replace('/[^0-9+]/', '', $p_phone) ?>"><?= $p_phone ?></a>
-                </p>
-                <?php if(!empty($p_phone2)): ?>
-                    <p>
-                        <a href="tel:<?= preg_replace('/[^0-9+]/', '', $p_phone2) ?>"><?= $p_phone2 ?></a>
-                    </p>
-                <?php endif; ?>
-                <?php if(!empty($p_tele)): ?>
-                    <p>
-                        <a href="tel:<?= preg_replace('/[^0-9+]/', '', $p_tele) ?>"><?= $p_tele ?> (Tel)</a>
-                    </p>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
+                                <div class="col-md-12">
+                                    <div class="contact-info">
+                                        <div class="icon">
+                                            <i class="fa fa-phone" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="content">
+                                            <h5>Call Us</h5>
+                                            <p>
+                                                <a
+                                                    href="tel:<?= preg_replace('/[^0-9+]/', '', $p_phone) ?>"><?= $p_phone ?></a>
+                                            </p>
+                                            <?php if(!empty($p_phone2)): ?>
+                                            <p>
+                                                <a
+                                                    href="tel:<?= preg_replace('/[^0-9+]/', '', $p_phone2) ?>"><?= $p_phone2 ?></a>
+                                            </p>
+                                            <?php endif; ?>
+                                            <?php if(!empty($p_tele)): ?>
+                                            <p>
+                                                <a href="tel:<?= preg_replace('/[^0-9+]/', '', $p_tele) ?>"><?= $p_tele ?>
+                                                    (Tel)</a>
+                                            </p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="col-md-12">
-        <div class="contact-info">
-            <div class="icon">
-                <i class="fa fa-envelope" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <h5>Email Us</h5>
-                <p>
-                    <a href="mailto:<?= $p_email ?>"><?= $p_email ?></a>
-                </p>
-                <?php if(!empty($p_email2)): ?>
-                    <p>
-                        <a href="mailto:<?= $p_email2 ?>"><?= $p_email2 ?></a>
-                    </p>
-                <?php endif; ?>
-                <?php if(!empty($p_email3)): ?>
-                    <p>
-                        <a href="mailto:<?= $p_email3 ?>"><?= $p_email3 ?></a>
-                    </p>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
+                                <div class="col-md-12">
+                                    <div class="contact-info">
+                                        <div class="icon">
+                                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="content">
+                                            <h5>Email Us</h5>
+                                            <p>
+                                                <a href="mailto:<?= $p_email ?>"><?= $p_email ?></a>
+                                            </p>
+                                            <?php if(!empty($p_email2)): ?>
+                                            <p>
+                                                <a href="mailto:<?= $p_email2 ?>"><?= $p_email2 ?></a>
+                                            </p>
+                                            <?php endif; ?>
+                                            <?php if(!empty($p_email3)): ?>
+                                            <p>
+                                                <a href="mailto:<?= $p_email3 ?>"><?= $p_email3 ?></a>
+                                            </p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="contactfill">
@@ -230,25 +201,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 }
 ?>
 
-<form autocomplete="off" action="" method="POST">
-    <div class="row">
-        <div class="col-md-12">
-            <input name="name" type="text" placeholder="Your Full Name" required class="getquotinput">
-        </div>
-        <div class="col-md-12">
-            <input name="email" type="email" placeholder="Email Id" required class="getquotinput">
-        </div>
-        <div class="col-md-12">
-            <input name="phone" type="text" pattern="[6-9]{1}[0-9]{9}" maxlength="10" placeholder="Contact No" required class="getquotinput">
-        </div>
-        <div class="col-md-12">
-            <input name="city" type="text" placeholder="State/City" required class="getquotinput">
-        </div>
-        <div class="col-md-12">
-            <button name="submit" type="submit" value="submit" class="getquotbutton d-none d-sm-block" style="border:none; width: 100%;">Submit Now</button>
-        </div>
-    </div>
-</form>
+                                <form autocomplete="off" action="" method="POST">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="name" type="text" placeholder="Your Full Name" required
+                                                class="getquotinput">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input name="email" type="email" placeholder="Email Id" required
+                                                class="getquotinput">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input name="phone" type="text" pattern="[6-9]{1}[0-9]{9}" maxlength="10"
+                                                placeholder="Contact No" required class="getquotinput">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input name="city" type="text" placeholder="State/City" required
+                                                class="getquotinput">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button name="submit" type="submit" value="submit"
+                                                class="getquotbutton d-none d-sm-block"
+                                                style="border:none; width: 100%;">Submit Now</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -264,8 +241,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
 
         <div class="mapouter">
-    <div class="gmap_canvas">
-        <?php
+            <div class="gmap_canvas">
+                <?php
         // 1. FETCH THE MAIN MAP EMBED CODE MATRIX FROM DB
         $canvas_map_query = "SELECT `map` FROM `contacts` LIMIT 1";
         $canvas_map_res   = mysqli_query($conn, $canvas_map_query);
@@ -296,20 +273,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         } else {
             // FALLBACK BLOCK: Standard default blueprint inside canvas wrapper
             ?>
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3500.1227931205685!2d77.0904194!3d28.6859732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d02331869ebd7%3A0xcb7112f7f4aed565!2sMR%20Lab!5e0!3m2!1sen!2sin!4v1778217393510!5m2!1sen!2sin"
-                width="100%" 
-                height="600" 
-                style="border:0;" 
-                allowfullscreen="" 
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-            <?php
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3500.1227931205685!2d77.0904194!3d28.6859732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d02331869ebd7%3A0xcb7112f7f4aed565!2sMR%20Lab!5e0!3m2!1sen!2sin!4v1778217393510!5m2!1sen!2sin"
+                    width="100%" height="600" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <?php
         }
         ?>
-    </div>
-</div>
+            </div>
+        </div>
 
     </main>
 
@@ -337,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <script src="assets/js/main.js"></script>
 
     <script>
-        new WOW().init();
+    new WOW().init();
     </script>
 </body>
 
