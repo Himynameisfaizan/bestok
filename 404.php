@@ -191,7 +191,7 @@ if (file_exists('inc/header.php')) {
             </p>
 
             <div class="bestok-404-actions">
-                <a href="<?php echo $site ?? '/'; ?>index" class="btn-bestok-primary">
+                <a href="<?php echo $site ?? '/'; ?>" class="btn-bestok-primary">
                     <i class="fa fa-home" aria-hidden="true"></i> Back to Homepage
                 </a>
                 <a href="<?php echo $site ?? '/'; ?>#products" class="btn-bestok-outline">
