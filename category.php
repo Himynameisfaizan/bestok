@@ -25,21 +25,16 @@ if (!$cat_master_res || mysqli_num_rows($cat_master_res) == 0) {
     exit();
 }
 
-// 3. AB SUB KUCH CONFIRM HONE KE BAAD HEADER.PHP INCLUDE KAREIN
 include 'inc/header.php';
 
 $category_row = mysqli_fetch_assoc($cat_master_res);
 $master_cate_id = $category_row['cate_id'];
-// ... (baaki ka sub_categories fetch aur HTML design same rahega)
 $category_title = htmlspecialchars($category_row['categories']);
 $meta_title = htmlspecialchars($category_row['meta_title'] ?? $category_row['categories']);
 $meta_desc = htmlspecialchars($category_row['meta_desc'] ?? '');
 $meta_key = htmlspecialchars($category_row['meta_key'] ?? '');
 
-// 3. FETCH RELATED SUBCATEGORIES FOR FILTERING BAR
-// 3. FETCH RELATED SUBCATEGORIES FOR FILTERING BAR (Image added)
 $sub_cats_arr = [];
-// Added `sub_cat_img` to the query
 $sub_query = "SELECT `id`, `categories`, `slug_url`, `sub_cat_img` FROM `sub_categories` WHERE `parent_id` =
 '$master_cate_id' AND `status` = 1 ORDER BY `categories` ASC";
 $sub_res = mysqli_query($conn, $sub_query);
@@ -249,11 +244,8 @@ $sub_cats_arr[] = $sub_row;
     /* Arrow slide-in animation */
 }
 </style>
-</head>
 
 <body class="home-2">
-
-
 
     <main class="main">
 
