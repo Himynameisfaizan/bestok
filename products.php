@@ -210,19 +210,20 @@ $product_result = mysqli_query($conn, $product_query);
                             <ul class="product-pagination">
                                 <!-- Previous Button -->
                                 <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                                    <a class="page-link" href="?page=<?= $page - 1 ?>" tabindex="-1">Previous</a>
+                                    <a class="page-link" href="products?page=<?= $page - 1 ?>"
+                                        tabindex="-1">Previous</a>
                                 </li>
 
                                 <!-- Page Numbers -->
                                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                                 <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                                    <a class="page-link" href="products?page=<?= $i ?>"><?= $i ?></a>
                                 </li>
                                 <?php endfor; ?>
 
                                 <!-- Next Button -->
                                 <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                                    <a class="page-link" href="?page=<?= $page + 1 ?>">Next</a>
+                                    <a class="page-link" href="products?page=<?= $page + 1 ?>">Next</a>
                                 </li>
                             </ul>
                         </nav>

@@ -160,7 +160,7 @@
                                 <?= nl2br(htmlspecialchars($clean_content)) ?>
                             </p>
 
-                            <a href="<?= $site ?>about.php" class="theme-btn">Know More<i
+                            <a href="<?= $site ?>about" class="theme-btn">Know More<i
                                     class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                             <p class="mb-3">At Bestok Industries Private Limited, we have consistently upheld the
                                 highest standards of quality in both the products we manufacture and the manner in which
                                 we interact with our clients.</p>
-                            <a href="<?= $site ?>about.php" class="theme-btn">Know More<i
+                            <a href="<?= $site ?>about" class="theme-btn">Know More<i
                                     class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>

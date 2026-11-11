@@ -191,7 +191,7 @@ if (file_exists('inc/header.php')) {
             </p>
 
             <div class="bestok-404-actions">
-                <a href="<?php echo $site ?? '/'; ?>index.php" class="btn-bestok-primary">
+                <a href="<?php echo $site ?? '/'; ?>index" class="btn-bestok-primary">
                     <i class="fa fa-home" aria-hidden="true"></i> Back to Homepage
                 </a>
                 <a href="<?php echo $site ?? '/'; ?>#products" class="btn-bestok-outline">
@@ -201,10 +201,10 @@ if (file_exists('inc/header.php')) {
 
             <div class="bestok-quick-links">
                 <span>Quick Links:</span>
-                <a href="<?php echo $site ?? '/'; ?>about.php">About Bestok</a>
-                <a href="<?php echo $site ?? '/'; ?>certificates.php">Certificates</a>
-                <a href="<?php echo $site ?? '/'; ?>gallery.php">Gallery</a>
-                <a href="<?php echo $site ?? '/'; ?>contact-us.php">Contact Us</a>
+                <a href="<?php echo $site ?? '/'; ?>about">About Bestok</a>
+                <a href="<?php echo $site ?? '/'; ?>certificates">Certificates</a>
+                <a href="<?php echo $site ?? '/'; ?>gallery">Gallery</a>
+                <a href="<?php echo $site ?? '/'; ?>contact-us">Contact Us</a>
             </div>
         </div>
     </div>
