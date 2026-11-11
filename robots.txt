@@ -1,19 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap:https://bestok.in/index.php?sitemap.xml
-Sitemap:https://bestok.in/index.php?sitemap-1.xml
-Sitemap:https://bestok.in/index.php?sitemap-2.xml
-Sitemap:https://bestok.in/index.php?sitemap-3.xml
-Sitemap:https://bestok.in/index.php?sitemap-4.xml
-Sitemap:https://bestok.in/index.php?sitemap-5.xml
-Sitemap:https://bestok.in/index.php?sitemap-6.xml
-Sitemap:https://bestok.in/index.php?sitemap-7.xml
-Sitemap:https://bestok.in/index.php?sitemap-8.xml
-Sitemap:https://bestok.in/index.php?sitemap-9.xml
-Sitemap:https://bestok.in/index.php?sitemap-10.xml
-Sitemap:https://bestok.in/index.php?sitemap-11.xml
-Sitemap:https://bestok.in/index.php?sitemap-12.xml
-Sitemap:https://bestok.in/index.php?sitemap-13.xml
-Sitemap:https://bestok.in/index.php?sitemap-14.xml
-Sitemap:https://bestok.in/index.php?sitemap-15.xml
-Sitemap:https://bestok.in/index.php?sitemap-16.xml
+
+Sitemap: https://bestok.in/sitemap.xml
